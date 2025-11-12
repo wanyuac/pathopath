@@ -1,0 +1,15 @@
+---
+title: "Pathopath quick tour"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Pathopath quick tour}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```r
+chrf <- read.csv(system.file("extdata","CHRF_2021.csv", package = "pathopath"))
+pw   <- pp_build_pathways(chrf, resolution = "ward", date_format = "%d/%m/%y")
+edges <- pp_compute_contacts(pw, dt = 0, d0 = 1)
+net   <- pp_build_network(edges)
+pp_plot_network(net$graph, edges)
+```

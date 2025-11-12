@@ -1,0 +1,22 @@
+Package: pathopath
+Type: Package
+Title: Network-based epidemiological analysis
+Version: 0.0.1
+Authors@R: c(
+    person(
+      "Yu", "Wan",
+      email = "wanyuac@gmail.com",
+      role = c("aut", "cre")
+    ),
+    person(
+      "Mohammad Saiful Islam", "Sajib",
+      email = "saiful.sajib@chrfbd.org",
+      role = c("aut")
+    )
+  )
+Description: More about what it does (maybe more than one line).
+    Continuation lines should be indented.
+License: GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
