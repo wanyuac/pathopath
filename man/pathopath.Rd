@@ -4,10 +4,11 @@
 \alias{pathopath}
 \title{Construct a contact network from epidemiological data}
 \usage{
-pathopath(epi_tsv = NULL)
+pathopath(movement_data = NULL)
 }
 \arguments{
-\item{epi_tsv}{Path to a spreadsheet of epidemiological data in the tab-delimited format (TSV)}
+\item{movement_data}{Path to a spreadsheet of subjects' movement records in the tab-delimited format. The Location
+column stores location accessions, which are unique identifiers of locations at a user-specified level.}
 }
 \value{
 An object of Class ContactNetwork
