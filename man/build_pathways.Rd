@@ -11,10 +11,10 @@ build_pathways(movements)
 }
 \value{
 A named list with each element named by a unique subject ID and the element's
-value is a tibble of this subject's movements, sorted by Time_in from the oldest to
-the latest.
+value is a tibble of this subject's Admission, movements, sorted by Admission and Time_start
+in an ascending order.
 }
 \description{
-This function takes as input the output tibble of import_movements. The tibble
-has four columns: Subject, Location, Time_in, and Time_out.
+This function takes as input the tibble "movements" in the output Movements object of import_movements.
+The tibble has four columns: Admission, Location, Time_start, and Time_end.
 }

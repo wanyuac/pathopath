@@ -4,17 +4,25 @@
 \alias{import_movements}
 \title{Import the movements spreadsheet}
 \usage{
-import_movements(movement_tsv)
+import_movements(movement_tsv, count_migrations = TRUE)
 }
 \arguments{
 \item{movement_tsv}{Path to a spreadsheet of subjects' location records in the tab-delimited format (TSV).}
+
+\item{count_migrations}{A logical switch turn on/off counting the number of migrations per admission
+(pathway). Default: TRUE.}
 }
 \value{
-Tibble movements
+An object of Class Movements, which consists of two tibble slots: movements and migrations. The
+migration tibble is NULL when argument count_migrations = FALSE.
 }
 \description{
 Read the TSV file recording subjects' locations and the period at each location.
-Required columns: Subject, Location, Time_in, Time_out, Admission.
+Required columns: (1) Subject: unique subject identifier; (2) Admission: unique admission identifier;
+(3) Location: unique location identifier; (4) Time_start: when the subject appeared at a specific location;
+(5) Time_end: when the subject left this location.
+
+Each admission defines a movement pathway.
 }
 \author{
 Yu Wan, \email{yu.wan@liverpool.ac.uk}

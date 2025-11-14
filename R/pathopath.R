@@ -14,17 +14,15 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 12 November 2025; the latest update: 13 November 2025
+#  Creation: 12 November 2025; the latest update: 14 November 2025
 
 pathopath <- function(movement_data = NULL) {
     movements <- import_movements(movement_data)
-    pathways <- build_pathways(movements)
-    migrations <- summarise_migrations(pathways)  # Summary of migrations (namely, number of location transitions - 1) per subject
+    pathways <- build_pathways(movements@movements)
     contacts <- compute_contacts(pathways)
     contact_network <- new("Pathopath",
                            movements = movements,
-                           pathways = pathways,
-                           migrations = migrations)
+                           pathways = pathways)
     return(contact_network)
 }
 
@@ -33,7 +31,6 @@ setClass(
     "Pathopath",
     slots = list(
         movements = "data.frame",
-        pathways = "list",
-        migrations = "data.frame"
+        pathways = "list"
     )
 )
