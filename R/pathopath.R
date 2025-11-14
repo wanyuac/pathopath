@@ -24,7 +24,8 @@ pathopath <- function(pathway_data = NULL) {
                contacts = contacts))
 }
 
-# Define the output class ###############
+
+# The output class of function pathpath ##########
 setClass(
     "Pathopath",
     slots = list(

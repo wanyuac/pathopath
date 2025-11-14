@@ -5,7 +5,7 @@ Version: 0.0.1
 Authors@R: c(
     person(
       "Yu", "Wan",
-      email = "wanyuac@gmail.com",
+      email = "yu.wan@liverpool.ac.uk",
       role = c("aut", "cre")
     ),
     person(

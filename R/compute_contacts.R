@@ -10,14 +10,15 @@
 #' @param d0 Duration for a point overlap in time. For example, if two subject were only at the same location
 #' for one day or even one hour. Default: 1 (day).
 #' @return Edges tibble with from, to, contact_type, direct_days, indirect_days, duration, delta_t, d0. Attribute 'resolution' is set.
-#' @export
+#' @importFrom magrittr %>%
+#' @export compute_contacts
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 13 November 2025
+#  Creation: 13 November 2025; the latest update: 14 November 2025
 
-find_contacts <- function(pathways, d0 = 1, dt = 0) {
-
+compute_contacts <- function(pathways, d0 = 1, dt = 0) {
+    return
 }
 
 .find_contacts <- function(pathways, indirect_cutoff = NULL, dt = NULL, d0 = 1) {

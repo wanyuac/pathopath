@@ -14,7 +14,9 @@
 #'
 #' @return An object of Class pathways, which consists of a list "pathways" with subject names as indices and a data
 #' frame "migrations". The migration tibble is NULL when argument count_migrations = FALSE.
-#' @export read_pathways
+#' @importFrom dplyr mutate arrange select group_split group_by summarise
+#' @importFrom magrittr %>%
+#' @export
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
@@ -24,12 +26,12 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
     if (! is.null(pathway_data)) {
         ESSENTIAL_COLUMNS <- c("Subject", "Pathway", "Location", "Time_start", "Time_end")
         DATE_FORMAT <- "%Y-%m-%d"
-        if (file_exists(pathway_data)) {  # fs::file_exists
-            movements <- read_tsv(file = pathway_data, show_col_types = FALSE, progress = FALSE)  # dplyr::read_tsv
+        if (fs::file_exists(pathway_data)) {  # fs::file_exists
+            movements <- readr::read_tsv(file = pathway_data, show_col_types = FALSE, progress = FALSE)  # dplyr::read_tsv
             if (nrow(movements) > 0 & ncol(movements) > 4) {  # The location spreadsheet must not be empty and contain at least five columns.
                 if (setequal(x = names(movements), y = ESSENTIAL_COLUMNS)) {  # Check if all essential columns are present
                     movements <- movements %>%
-                        dplyr::select(all_of(ESSENTIAL_COLUMNS)) %>%  # Drop unnecessary columns and fix the order of columns
+                        select(all_of(ESSENTIAL_COLUMNS)) %>%  # Drop unnecessary columns and fix the order of columns
                         mutate(
                             Time_start = as.Date(movements$Time_start, format = DATE_FORMAT),
                             Time_end = as.Date(movements$Time_end, format = DATE_FORMAT)
@@ -59,7 +61,16 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
                migrations = migrations))
 }
 
+
 # Functional modules ###############
+setClass(
+    "Pathways",
+    slots = list(
+        pathways = "list",
+        migrations = "data.frame"
+    )
+)
+
 .build_pathways <- function(movements) {
     # This function assumes rows in movements are sorted by Subject, Pathway, and Time_start in
     # an ascending order, namely, the output from function import_movements.
@@ -75,7 +86,7 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
     migration_summary <- movements %>%
         group_by(Subject, Pathway) %>%
         summarise(
-            Migrations = n() - 1L,
+            Migrations = dplyr::n() - 1L,
             Time_start_earliest = min(Time_start),
             Time_end_latest = max(Time_end),
             .groups = "drop"
@@ -84,10 +95,3 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
     return(migration_summary)
 }
 
-setClass(
-    "Pathways",
-    slots = list(
-        pathways = "list",
-        migrations = "data.frame"
-    )
-)
