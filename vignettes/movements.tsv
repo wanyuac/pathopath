@@ -1,4 +1,4 @@
-Subject	Admission	Location	Time_start	Time_end
+Subject	Pathway	Location	Time_start	Time_end
 P01	P01_01	Bld1:F1:W05	2021-11-05	2021-11-05
 P01	P01_01	Bld1:F1:W04	2021-11-06	2021-12-14
 P01	P01_01	Bld1:F1:W07	2021-12-15	2021-12-26

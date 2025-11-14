@@ -1,12 +1,11 @@
-#' @title Compute direct and indirect contacts from pathways
+#' @title Determine direct and indirect contacts from pathways
 #'
 #' @description
 #' A direct contact is defined as an overlap between pathways of distinct subjects at the same location and on the same day.
 #' An indirect contact is defined as an overlap between pathways of distinct subjects at the same location and not overlap
 #' in time unless allowing ±dt days.
 #'
-#' @param pathways Output of function build_pathways
-#' @param indirect_cutoff Numeric; alias is `dt`. If neither is set, defaults to 0.
+#' @param pathways Output of function read_pathways.
 #' @param dt Delta t, ± dt days to determine an indirect contact. If both are set, `indirect_cutoff` wins.
 #' @param d0 Duration for a point overlap in time. For example, if two subject were only at the same location
 #' for one day or even one hour. Default: 1 (day).
@@ -17,7 +16,11 @@
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
 #  Creation: 13 November 2025; the latest update: 13 November 2025
 
-compute_contacts <- function(pathways, indirect_cutoff = NULL, dt = NULL, d0 = 1) {
+find_contacts <- function(pathways, d0 = 1, dt = 0) {
+
+}
+
+.find_contacts <- function(pathways, indirect_cutoff = NULL, dt = NULL, d0 = 1) {
   if (!is.null(dt) && is.null(indirect_cutoff)) indirect_cutoff <- dt
   if (is.null(indirect_cutoff)) indirect_cutoff <- 0
   stopifnot(indirect_cutoff >= 0, d0 >= 0)

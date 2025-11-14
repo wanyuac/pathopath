@@ -4,14 +4,14 @@
 \alias{pathopath}
 \title{Construct a contact network from epidemiological data}
 \usage{
-pathopath(movement_data = NULL)
+pathopath(pathway_data = NULL)
 }
 \arguments{
-\item{movement_data}{Path to a spreadsheet of subjects' movement records in the tab-delimited format. The Location
-column stores location accessions, which are unique identifiers of locations at a user-specified level.}
+\item{pathway_data}{Path to a spreadsheet of subjects' movement records arranged in pathways in the tab-delimited
+format. The Location column stores location accessions, which are unique identifiers of locations at a user-specified level.}
 }
 \value{
-An object of Class ContactNetwork
+A named list of two elements "pathways" and "contacts".
 }
 \description{
 This is the main function of the Pathopath package
