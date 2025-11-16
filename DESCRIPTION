@@ -24,4 +24,5 @@ Imports:
     dplyr,
     readr,
     fs,
-    stringr
+    stringr,
+    purrr
