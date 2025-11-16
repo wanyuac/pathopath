@@ -22,11 +22,14 @@ compute_contacts <- function(pathways, dt = 3) {
     # This function creates pairwise combinations of subject names as list of two-element character vectors using the
     # combn function, and then applies the .pairwise_contacts function to detect contacts between each pair of subjects.
     if (dt < 0) {
-        print("Error: dt cannot be negative. Reset dt to the default value of three.")
-        dt <- 3
+        stop("Error: dt cannot be negative.")
     }
-    subject_pairs <- combn(x = names(pathways),m = 2, simplify = FALSE)
-    contacts <- list_rbind(map(subject_pairs, ~ .pairwise_contacts(.x, pathways = pathways, dt = dt)))
+    if (length(pathways) >= 2L) {
+        subject_pairs <- combn(x = names(pathways), m = 2, simplify = FALSE)
+        contacts <- list_rbind(map(subject_pairs, ~ .pairwise_contacts(.x, pathways = pathways, dt = dt)))
+    } else {
+        stop("Input error: the list of pathways has less than two elements.")
+    }
     return(contacts)
 }
 

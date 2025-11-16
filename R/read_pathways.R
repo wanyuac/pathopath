@@ -14,12 +14,13 @@
 #'
 #' @return An object of Class pathways, which consists of a list "pathways" with subject names as indices and a data
 #' frame "migrations". The migration tibble is NULL when argument count_migrations = FALSE.
+#' @importFrom tibble tibble
 #' @importFrom dplyr mutate arrange select group_split group_by summarise
 #' @export read_pathways
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 15 November 2025
+#  Creation: 13 November 2025; the latest update: 16 November 2025
 
 read_pathways <- function(pathway_data, count_migrations = TRUE) {
     if (! is.null(pathway_data)) {
@@ -28,7 +29,7 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
         if (fs::file_exists(pathway_data)) {  # fs::file_exists
             movements <- readr::read_tsv(file = pathway_data, show_col_types = FALSE, progress = FALSE)  # dplyr::read_tsv
             if (nrow(movements) > 0 & ncol(movements) > 4) {  # The location spreadsheet must not be empty and contain at least five columns.
-                if (setequal(x = names(movements), y = ESSENTIAL_COLUMNS)) {  # Check if all essential columns are present
+                if (all(ESSENTIAL_COLUMNS %in% names(movements))) {  # Check if all essential columns are present
                     movements <- movements |>
                         select(all_of(ESSENTIAL_COLUMNS)) |>  # Drop unnecessary columns and fix the order of columns
                         mutate(
@@ -46,7 +47,7 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
                     stop("Error: essential columns Subject, Pathway, Location, Time_start, or Time_end were not found in movement records.")
                 }
             } else {
-                stop("Error: the TSV file of locations is empty or has less than five columns.")
+                stop("Error: the TSV file of pathways is empty or has less than five columns.")
             }
         } else {
             stop("Error: the pathway TSV file was not found.")
