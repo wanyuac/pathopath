@@ -20,3 +20,8 @@ A direct contact is defined as an overlap between pathways of distinct subjects 
 An indirect contact is defined as an overlap between pathways of distinct subjects at the same location and not overlap
 in time unless allowing ±dt days.
 }
+\author{
+Yu Wan, \email{yu.wan@liverpool.ac.uk}
+
+Mohammad Saiful Islam Sajib, \email{saiful.sajib@chrfbd.org}
+}

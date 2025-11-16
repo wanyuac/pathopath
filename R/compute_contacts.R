@@ -12,6 +12,10 @@
 #' @importFrom tibble tibble
 #' @importFrom purrr map list_rbind
 #' @importFrom dplyr filter bind_rows across mutate
+#'
+#' @author Yu Wan, \email{yu.wan@liverpool.ac.uk}
+#' @author Mohammad Saiful Islam Sajib, \email{saiful.sajib@chrfbd.org}
+#'
 #' @export compute_contacts
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
@@ -109,7 +113,7 @@ setClass(
                                       Period_1 = period_1@length,
                                       Period_2 = period_2@length,
                                       Interval = new_contact$interval,
-                                      dt = dt)
+                                      dt = dt)  # Effective contact length: Eff_length = Length + dt for direct contacts and Length for indirect contacts.
                     contacts <- bind_rows(contacts, new_row)  # Add a new row regardless of whether a direct or indirect contact is detected.
                 }
             }

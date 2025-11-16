@@ -8,15 +8,18 @@ pathopath(pathway_data = NULL, dt = 3)
 }
 \arguments{
 \item{pathway_data}{Path to a spreadsheet of subjects' movement records arranged in pathways in the tab-delimited
-format. The Location column stores location accessions, which are unique identifiers of locations at a user-specified level.}
+format. The Location column stores location accessions, which are unique identifiers of locations at a user-specified level.
+The pathway accessions must be unique across the input data.}
 
 \item{dt}{Delta t, ±dt days (inclusive) to determine an indirect contact. Set it to zero to turn off the detection of
 indirect contacts. Default: 3.}
 }
 \value{
-A Pathopath object of three slots: (1) pathways, a list of pathway tibbles named by subject names; (2) migrations,
+A Pathopath object of five slots: (1) pathways, a list of pathway tibbles named by subject names; (2) migrations,
 a tibble summarising the number of migrations per pathway; (3) contacts, a tibble of contact status (Direct, Indirect, and None)
-between pathways of different subjects across shared locations.
+between pathways of different subjects across shared locations; (4) summary, a tibble summarising direct and indirect
+contacts for each unique combination of Subject_1, Subject_2, Pathway_1, and Pathway_2; (5) network, a Network object
+with two slots - V for nodes and E for edges - for exportation as node and edge tables compatible with Cytoscape.
 }
 \description{
 This is the main function of the Pathopath package

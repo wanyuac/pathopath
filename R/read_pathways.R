@@ -9,13 +9,14 @@
 #' @param pathway_data Path to a spreadsheet of user-defined pathways in the tab-delimited format (TSV).
 #' @param count_migrations A logical switch turn on/off counting the number of migrations per pathway. Default: TRUE.
 #'
-#' @author Yu Wan, \email{yu.wan@liverpool.ac.uk}
-#' @author Mohammad Saiful Islam Sajib, \email{saiful.sajib@chrfbd.org}
-#'
 #' @return An object of Class pathways, which consists of a list "pathways" with subject names as indices and a data
 #' frame "migrations". The migration tibble is NULL when argument count_migrations = FALSE.
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate arrange select group_split group_by summarise
+#'
+#' @author Yu Wan, \email{yu.wan@liverpool.ac.uk}
+#' @author Mohammad Saiful Islam Sajib, \email{saiful.sajib@chrfbd.org}
+#'
 #' @export read_pathways
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>

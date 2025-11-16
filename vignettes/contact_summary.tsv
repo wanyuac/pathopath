@@ -1,0 +1,11 @@
+Subject_1	Subject_2	Pathway_1	Pathway_2	Direct_contact_num	Direct_contact_len	Direct_contact_loc	Indirect_contact_num	Indirect_contact_len	Indirect_contact_loc
+P01	P12	P01_01	P12_01	1	15	1	0	0	0
+P01	P20	P01_01	P20_01	1	2	1	1	1	1
+P02	P03	P02_02	P03_01	1	10	1	0	0	0
+P02	P06	P02_02	P06_01	1	22	1	0	0	0
+P06	P15	P06_01	P15_01	1	1	1	0	0	0
+P06	P20	P06_01	P20_01	1	32	1	0	0	0
+P06	P23	P06_01	P23_01	0	0	0	1	3	1
+P14	P22	P14_01	P22_01	1	4	1	0	0	0
+P15	P20	P15_01	P20_01	1	4	1	0	0	0
+P16	P24	P16_01	P24_01	1	3	1	0	0	0
