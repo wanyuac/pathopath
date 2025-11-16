@@ -32,15 +32,15 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
                     movements <- movements |>
                         select(all_of(ESSENTIAL_COLUMNS)) |>  # Drop unnecessary columns and fix the order of columns
                         mutate(
-                            Time_start = as.Date(movements$Time_start, format = DATE_FORMAT),
-                            Time_end = as.Date(movements$Time_end, format = DATE_FORMAT)
+                            Time_start = as.Date(Time_start, format = DATE_FORMAT),
+                            Time_end = as.Date(Time_end, format = DATE_FORMAT)
                         ) |>
                         arrange(Subject, Pathway, Time_start)  # Sort rows by these three columns in an ascending order
                     pathways <- .build_pathways(movements)
                     if (count_migrations) {
                         migrations <- .summarise_migrations(movements)
                     } else {
-                        migrations <- NULL
+                        migrations <- tibble()  # Return an empty tibble to comply with the definition of Class Pathways
                     }
                 } else {
                     stop("Error: essential columns Subject, Pathway, Location, Time_start, or Time_end were not found in movement records.")
@@ -69,7 +69,7 @@ setClass(
 
 .build_pathways <- function(movements) {
     # This function assumes rows in movements are sorted by Subject, Pathway, and Time_start in
-    # an ascending order, namely, the output from function import_movements.
+    # an ascending order.
     pathways <- movements |> group_split(Subject)
     names(pathways) <- unique(movements$Subject)  # Named list of tibbles: one tibble per Subject
     pathways <- lapply(pathways, function(df) select(df, -Subject))  # Drop the redundant Subject column from each tibble

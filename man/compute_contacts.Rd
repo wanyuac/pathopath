@@ -4,15 +4,13 @@
 \alias{compute_contacts}
 \title{Determine direct and indirect contacts from pathways}
 \usage{
-compute_contacts(pathways, d0 = 1, dt = 0)
+compute_contacts(pathways, dt = 3)
 }
 \arguments{
-\item{pathways}{Output of function read_pathways.}
+\item{pathways}{Named list "pathways" in the output of function read_pathways.}
 
-\item{d0}{Duration for a point overlap in time. For example, if two subject were only at the same location
-for one day or even one hour. Default: 1 (day).}
-
-\item{dt}{Delta t, ± dt days to determine an indirect contact. If both are set, `indirect_cutoff` wins.}
+\item{dt}{Delta t, ± dt days to determine an indirect contact. Set it to zero to turn off the detection of indirect contacts.
+Default: 3.}
 }
 \value{
 Edges tibble with from, to, contact_type, direct_days, indirect_days, duration, delta_t, d0. Attribute 'resolution' is set.
