@@ -71,7 +71,15 @@ detach(name = "package:pathopath", unload = TRUE)  # The package can be reloaded
 remove.packages("pathopath")  # Use this command to delete the package
 ```
 
-## 3. Appendix
+## 3. Helper functions
+
+The functions are components of the `pathopath` function, and they can be used separately for exploration.
+
+* `read_pathways(pathway_data, count_migrations = TRUE)`: for importing the input TSV file of the `pathopath` function.
+* `compute_contacts(pathways, dt = 3)`: for detection and quantification of direct and indirect contacts.
+* `create_network(contact_summary)`: for converting a contact-summary table into a network object.
+
+## 4. Appendix
 
 ### Citation
 
