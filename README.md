@@ -1,36 +1,88 @@
 # Pathopath
 
-Utilities to build patient pathways and compute contact networks from ward-level movements,
-with quick plotting and a simple Shiny app.
+**Patho**gen/**Patho**logical **Path**ways (PathoPath) is an R package determining direct and indirect contacts between movement pathways of subjects and building a contact network accordingly. It was developed for tracing transmission of pathogens. Subjects include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility—for instance, a single hospital or hospital network—from admission to discharge.
 
-## Installation
+Strengths of pathopath includes (1) versability—support multiple location levels (Hospital, Building, Floor, Unit, Ward, Room, Bed, *etc*) that can be specified by users; (2) generality—incorporation of patients and inanimate subjects.
+
+## 1. Installation
+
+1. Download the package from [Releases](https://github.com/wanyuac/pathopath/releases) of this GitHub repository (for example, `pathopath_0.0.1.tar.gz`)
+2. Install the pathopath package in R using the following command and following prompts to install dependencies (R packages dplyr, readr, fs, stringr, tibble, and purrr) that are not previously installed.
+
 ```r
-install.packages(".", repos = NULL, type = "source", dependencies = TRUE)
+install.packages("pathopath_0.0.1.tar.gz", repos = NULL, type = "source", dependencies = TRUE)
+```
+
+## 2. Usage
+
+### Load the package
+
+```R
 library(pathopath)
 ```
 
-## Prepare input files
+### Where to start?
 
-Please ensure input files do not have any missing values ("" or NA).
+Users can start with the `pathopath` function. This function integrates other functions of this package into a pipeline. It has a mandatory parameter `pathway_data` for input and an optional parameter `dt` (default value: 3) for detection of indirect contacts, which can be turned off by specifying `dt = 0`.
 
-* `movements.tsv` from user's records of locations and time. The column `Location` stands for location accessions, which are independent to any specific location level (Hospital, Building, Floor, Ward, Unit, Bed, _etc_).
-  * `Time_in` and `Time_out`: time stamps following [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html). Pathopath current only supports dates (YYYY-MM-DD).
-
-* `genotypes.tsv`: currently not supported.
-
-## Try the included datasets
-
-```r
-chrf <- read.csv(system.file("extdata","CHRF_2021.csv", package = "pathopath"))
-demo <- read.csv(system.file("extdata","patients_demo.csv", package = "pathopath"))
+```bash
+?pathopath  # Read the function's documentation
 ```
 
-## Shiny app
+### Prepare the input file
+
+So far the `pathopath` function takes as input a single TSV file of five columns: *Subject*, *Pathway*, *Location*, *Time_start*, and *Time_end*.
+
+* **Subject**: unique subject identifiers, for example, anonymised patient IDs
+
+* **Pathway**: unique pathway identifiers, commonly known as admission accessions in electronic healthcare records
+
+* **Location**: unique location identifiers. Users can maintain a separate spreadsheet linking these identifiers to any specific location level (Hospital, Building, Floor, Ward, Unit, Bed, _etc_).
+
+* **Time_start** and **Time_end**: time stamps following the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format (YYYY-MM-DD). Pathopath current only supports dates.
+
+Users can find [`pathways.tsv`](https://github.com/wanyuac/pathopath/blob/main/template/pathways.tsv) for a template of this input file. Additional columns will not be processed by the function. An example input file is accessible in the vignette directory ([`input_movements.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/input_movements.tsv)).
+
+**Limitations**
+
+* Any missing values ("" or NA) in the input file will break the pathopath pipeline.
+* Any incorrect column names or missing columns will cause the function to stop with an error message.
+
+### Use the pathopath function
+
 ```R
-source(system.file("scripts","Pathopath_shiny.R", package = "pathopath"))
+pp <- pathopath(pathway_data = "vignettes/input_movements.tsv", dt = 3)
 ```
 
-## Strengths of pathopath
+Users can find `demo.R` and example output files in the [vignettes](https://github.com/wanyuac/pathopath/tree/main/vignettes) directory for further details.
 
-* Versability: Support multiple location levels (Hospital, Building, Floor, Unit, Ward, Room, Bed, *etc*) that can be specified by users.
-* Generality: Incorporation of patients and inanimate subjects.
+### Use the output
+
+The `pathopath` function returns an S4 Pathopath object, which comprises five data slots that can be accessed using the `@` operator (*e.g.*, `pp@contacts`) or the `slot()` function in base R \[*e.g.*, `slot(pp, "contacts")`\]. An example output can be accessed in the vignette directory ([`pp.rds`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_pp.rds)). These slots are explained below.
+
+* **pathways**: a list of tibbles (compatible with data frames) and named by subject identifiers. So the length of this list equals the number of unique subjects in the input TSV file. Each tibble consists of four columns—Pathway, Location, Time_start, and Time_end—from the input file. Note that the tibble of an subject may contain two or more pathways. Example data file: [`output_pathways.rds`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_pathways.rds) (use command `pathways <- readRDS("vignette/pathways.rds")` to load it into your R environment).
+* **migrations**: a tibble counting the number of location changes (migrations) in each pathway and reporting the start and end time of each pathway. It consists of five columns: Subject, Pathway, Migrations, Time_start,  and Time_end. Example: [`output_migrations.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_migrations.tsv).
+* **contacts**: a tibble of 15 columns reporting contact status (Direct/Indirect/None) between any pair of pathways at each shared location. The Length column consists of the lengths of contacts measured by days. Note that two pathways may have a direct contact at a location and an indirect contact at another location. Example: [`output_contacts.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_contacts.tsv).
+* **summary**: a tibble of 10 columns reporting the total number, length, and location numbers of direct and indirect contacts between pathways. Example: [`output_contact_summary.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_contact_summary.tsv).
+* **network**: an S4 Network object comprising two slots of tibbles: V for the node table and E for the edge table compatible with network visualisation in [Cytoscape](https://cytoscape.org/). Example: [`output_network_nodes.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_network_nodes.tsv) for V (`pp@network@V`) and [`output_network_edges.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_network_edges.tsv) for E (`pp@network@E`).
+
+### Detach the package after use
+
+```R
+detach(name = "package:pathopath", unload = TRUE)  # The package can be reloaded using the library() function.
+
+remove.packages("pathopath")  # Use this command to delete the package
+```
+
+## 3. Appendix
+
+### Citation
+
+Wan Y, Sajib MSI. Pathopath. https://github.com/wanyuac/pathopath (2025).
+
+### Funding sources
+
+* NIHR Global Health Research Development Award to the Child Health Research Foundation in Bangladesh.
+* David Price Evans Research Fellowship to Yu Wan.
+* Centres for Antimicrobial Optimisation Network (CAMO-Net) Research Fellowship to Mohammad Saiful Islam Sajib.
+

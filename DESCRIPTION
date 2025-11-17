@@ -25,4 +25,5 @@ Imports:
     readr,
     fs,
     stringr,
-    purrr
+    purrr,
+    tibble

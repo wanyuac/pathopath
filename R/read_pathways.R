@@ -21,7 +21,7 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 16 November 2025
+#  Creation: 13 November 2025; the latest update: 17 November 2025
 
 read_pathways <- function(pathway_data, count_migrations = TRUE) {
     if (! is.null(pathway_data)) {
@@ -84,8 +84,8 @@ setClass(
         group_by(Subject, Pathway) |>
         summarise(
             Migrations = dplyr::n() - 1L,
-            Time_start_earliest = min(Time_start),
-            Time_end_latest = max(Time_end),
+            Time_start = min(Time_start),
+            Time_end = max(Time_end),
             .groups = "drop"
         )
     return(migration_summary)

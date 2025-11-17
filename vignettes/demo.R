@@ -8,7 +8,7 @@ library(readr)
 library(tidyr)
 library(pathopath)
 
-pp <- pathopath(pathway_data = "vignettes/movements.tsv", dt = 3)
+pp <- pathopath(pathway_data = "vignettes/input_movements.tsv", dt = 3)
 
 # Explore individual slots
 print(slotNames(pp))  # Five slot names
@@ -21,9 +21,10 @@ V <- pp@network@V
 E <- pp@network@E
 
 # Export results
-write_tsv(contacts, file = "vignettes/contacts.tsv")
-write_tsv(contact_summary, file = "vignettes/contact_summary.tsv")
-write_tsv(V, file = "vignettes/network_nodes.tsv")
-write_tsv(E, file = "vignettes/network_edges.tsv")
-
-saveRDS(pp, file = "vignettes/pp.rds")
+write_tsv(migrations, file = "vignettes/output_migrations.tsv")
+write_tsv(contacts, file = "vignettes/output_contacts.tsv")
+write_tsv(contact_summary, file = "vignettes/output_contact_summary.tsv")
+write_tsv(V, file = "vignettes/output_network_nodes.tsv")
+write_tsv(E, file = "vignettes/output_network_edges.tsv")
+saveRDS(pp, file = "vignettes/output_pp.rds")
+saveRDS(pathways, file = "vignettes/output_pathways.rds")
