@@ -4,10 +4,10 @@
 \alias{read_pathways}
 \title{Read the pathways spreadsheet}
 \usage{
-read_pathways(pathway_data, count_migrations = TRUE)
+read_pathways(pathways, count_migrations = TRUE)
 }
 \arguments{
-\item{pathway_data}{Path to a spreadsheet of user-defined pathways in the tab-delimited format (TSV).}
+\item{pathways}{Path to a spreadsheet of user-defined pathways in the tab-delimited format (TSV).}
 
 \item{count_migrations}{A logical switch turn on/off counting the number of migrations per pathway. Default: TRUE.}
 }

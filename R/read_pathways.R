@@ -6,12 +6,15 @@
 #' subject identifier; (2) Pathway: unique pathway identifier; (3) Location: unique location identifier; (4) Time_start:
 #' when the subject appeared at a specific location; (5) Time_end: when the subject left this location.
 #'
-#' @param pathway_data Path to a spreadsheet of user-defined pathways in the tab-delimited format (TSV).
+#' @param pathways Path to a spreadsheet of user-defined pathways in the tab-delimited format (TSV).
 #' @param count_migrations A logical switch turn on/off counting the number of migrations per pathway. Default: TRUE.
 #'
 #' @return An object of Class pathways, which consists of a list "pathways" with subject names as indices and a data
 #' frame "migrations". The migration tibble is NULL when argument count_migrations = FALSE.
 #' @importFrom tibble tibble
+#' @importFrom readr read_tsv
+#' @importFrom fs file_exists
+#' @importFrom tidyselect all_of
 #' @importFrom dplyr mutate arrange select group_split group_by summarise
 #'
 #' @author Yu Wan, \email{yu.wan@liverpool.ac.uk}
@@ -21,14 +24,14 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 17 November 2025
+#  Creation: 13 November 2025; the latest update: 18 November 2025
 
-read_pathways <- function(pathway_data, count_migrations = TRUE) {
-    if (! is.null(pathway_data)) {
-        ESSENTIAL_COLUMNS <- c("Subject", "Pathway", "Location", "Time_start", "Time_end")
-        DATE_FORMAT <- "%Y-%m-%d"
-        if (fs::file_exists(pathway_data)) {  # fs::file_exists
-            movements <- readr::read_tsv(file = pathway_data, show_col_types = FALSE, progress = FALSE)  # dplyr::read_tsv
+read_pathways <- function(pathways, count_migrations = TRUE) {
+    if (! is.null(pathways)) {
+        if (file_exists(pathways)) {  # fs::file_exists
+            ESSENTIAL_COLUMNS <- c("Subject", "Pathway", "Location", "Time_start", "Time_end")
+            DATE_FORMAT <- "%Y-%m-%d"
+            movements <- read_tsv(file = pathways, show_col_types = FALSE, progress = FALSE)
             if (nrow(movements) > 0 & ncol(movements) > 4) {  # The location spreadsheet must not be empty and contain at least five columns.
                 if (all(ESSENTIAL_COLUMNS %in% names(movements))) {  # Check if all essential columns are present
                     movements <- movements |>
@@ -54,7 +57,7 @@ read_pathways <- function(pathway_data, count_migrations = TRUE) {
             stop("Error: the pathway TSV file was not found.")
         }
     } else {
-        stop("Error: Parameter 'pathway_data' is not specified.")
+        stop("Error: Parameter 'pathways' is not specified.")
     }
     return(new("Pathways",
                pathways = pathways,

@@ -4,6 +4,8 @@
 #' software for network analysis.
 #'
 #' @param contact_summary The tibble or data frame of contact summaries in pathopath's output (slot "summary").
+#' @param genotypes Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
+#' names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.
 #'
 #' @return A network object with two tibble slots: V for nodes and E for edges.
 #'
@@ -11,15 +13,18 @@
 #' @author Mohammad Saiful Islam Sajib, \email{saiful.sajib@chrfbd.org}
 #'
 #' @importFrom tibble tibble
+#' @importFrom readr read_tsv
+#' @importFrom fs file_exists
 #' @importFrom tidyr pivot_longer
+#' @importFrom tidyselect all_of
 #' @importFrom dplyr select mutate rename bind_rows distinct
 #' @export create_network
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 16 November 2025; the latest update: 16 November 2025
+#  Creation: 16 November 2025; the latest update: 18 November 2025
 
-create_network <- function(contact_summary) {
+create_network <- function(contact_summary, genotypes = NULL) {
     # Create an undirected network of contacts between pathways, assuming pathway accessions are unique across the input tibble.
     # To-do: genotypical data can be added by this function as node attributes in the future.
     if (nrow(contact_summary) > 0) {
@@ -57,9 +62,41 @@ create_network <- function(contact_summary) {
                          names_to = c(".value", "pair"),
                          names_pattern = "(Pathway|Subject)_(.)") |>
             distinct(Pathway, Subject)
+
+        # Incorporate user's optional genotype data ###############
+        genotypes <- .read_genotypes(genotypes)
+        if (! is.null(genotypes)) {
+            genotypes_unique <- genotypes |> distinct(Subject, Pathway, .keep_all = TRUE)  # Only select the first row for duplicated combinations of Subject and Pathway
+            nodes <- nodes |>
+                left_join(genotypes_unique, by = c("Subject", "Pathway")) |>
+                arrange(Pathway, Subject)
+        }
     } else {
         edges <- tibble()
         nodes <- tibble()
     }
     return(new("Network", V = nodes, E = edges))
+}
+
+.read_genotypes <- function(genotype_data = NULL) {
+    if (! is.null(genotype_data)) {
+        if (file_exists(genotype_data)) {
+            ESSENTIAL_COLUMNS <- c("Sample", "Subject", "Pathway")
+            genotype_table <- read_tsv(file = genotype_data, show_col_types = FALSE, progress = FALSE)
+            if (nrow(genotype_table) > 0 & ncol(genotype_table) >3) {
+                if (all(ESSENTIAL_COLUMNS %in% names(genotype_table))) {
+                    genotypes <- genotype_table[, c(ESSENTIAL_COLUMNS, setdiff(names(genotype_table), ESSENTIAL_COLUMNS))]
+                } else {
+                    genotypes <- NULL  # Not all essential columns are present in the input spreadsheet
+                }
+            } else {
+                genotypes <- NULL
+            }
+        } else {
+            genotypes <- NULL  # The input file does not exist.
+        }
+    } else {
+        genotypes <- NULL
+    }
+    return(genotypes)
 }

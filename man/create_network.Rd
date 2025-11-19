@@ -4,10 +4,13 @@
 \alias{create_network}
 \title{Create a undirected Cytoscape-compatible network files from a contact summary}
 \usage{
-create_network(contact_summary)
+create_network(contact_summary, genotypes = NULL)
 }
 \arguments{
 \item{contact_summary}{The tibble or data frame of contact summaries in pathopath's output (slot "summary").}
+
+\item{genotypes}{Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
+names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.}
 }
 \value{
 A network object with two tibble slots: V for nodes and E for edges.

@@ -2,9 +2,12 @@
 #'
 #' @description This is the main function of the Pathopath package
 #'
-#' @param pathway_data Path to a spreadsheet of subjects' movement records arranged in pathways in the tab-delimited
+#' @param pathways Path to a spreadsheet of subjects' movement records arranged in pathways in the tab-delimited
 #' format. The Location column stores location accessions, which are unique identifiers of locations at a user-specified level.
-#' The pathway accessions must be unique across the input data.
+#' The pathway accessions must be unique across the input data. Note that by definition, subject and pathway accessions are in
+#' one-to-one mapping.
+#' @param genotypes Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
+#' names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.
 #' @param dt Delta t, ±dt days (inclusive) to determine an indirect contact. Set it to zero to turn off the detection of
 #' indirect contacts. Default: 3.
 #'
@@ -23,11 +26,11 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 12 November 2025; the latest update: 16 November 2025
+#  Creation: 12 November 2025; the latest update: 18 November 2025
 
-pathopath <- function(pathway_data = NULL, dt = 3) {
+pathopath <- function(pathways = NULL, genotypes = NULL, dt = 3) {
     # Parse the input spreadsheet into a named list of pathways and count the number of migrations per pathway
-    pathways <- read_pathways(pathway_data)
+    pathways <- read_pathways(pathways)
 
     # Identify and quantify direct and indirect contacts between pathways. The results include absence of contacts
     # between pathways because indirect contacts depend on the dt parameter.
@@ -45,7 +48,7 @@ pathopath <- function(pathway_data = NULL, dt = 3) {
                migrations = pathways@migrations,
                contacts = contacts,
                summary = contact_summary,
-               network = create_network(contact_summary)))
+               network = create_network(contact_summary, genotypes)))
 }
 
 

@@ -48,7 +48,7 @@ Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/patho
 ### Use the pathopath function
 
 ```R
-pp <- pathopath(pathway_data = "vignettes/input_movements.tsv", dt = 3)
+pp <- pathopath(pathways = "vignettes/input_movements.tsv", dt = 3)
 ```
 
 Users can find `demo.R` and example output files in the [vignettes](https://github.com/wanyuac/pathopath/tree/main/vignettes) directory for further details.
@@ -75,9 +75,9 @@ remove.packages("pathopath")  # Use this command to delete the package
 
 The functions are components of the `pathopath` function, and they can be used separately for exploration.
 
-* `read_pathways(pathway_data, count_migrations = TRUE)`: for importing the input TSV file of the `pathopath` function.
+* `read_pathways(pathways, count_migrations = TRUE)`: for importing the input TSV file of the `pathopath` function.
 * `compute_contacts(pathways, dt = 3)`: for detection and quantification of direct and indirect contacts.
-* `create_network(contact_summary)`: for converting a contact-summary table into a network object.
+* `create_network(contact_summary, genotypes)`: for converting a contact-summary table into a network object.
 
 ## 4. Appendix
 
