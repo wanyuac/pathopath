@@ -6,7 +6,7 @@
 #' subject identifier; (2) Pathway: unique pathway identifier; (3) Location: unique location identifier; (4) Time_start:
 #' when the subject appeared at a specific location; (5) Time_end: when the subject left this location.
 #'
-#' @param pathways Path to a spreadsheet of user-defined pathways in the tab-delimited format (TSV).
+#' @param movement_table Path to a tab-delimited spreadsheet of user-defined movement pathways.
 #' @param count_migrations A logical switch turn on/off counting the number of migrations per pathway. Default: TRUE.
 #'
 #' @return An object of Class pathways, which consists of a list "pathways" with subject names as indices and a data
@@ -24,14 +24,14 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 18 November 2025
+#  Creation: 13 November 2025; the latest update: 6 January 2026
 
-read_pathways <- function(pathways, count_migrations = TRUE) {
-    if (! is.null(pathways)) {
-        if (file_exists(pathways)) {  # fs::file_exists
+read_pathways <- function(movement_table, count_migrations = TRUE) {
+    if (! is.null(movement_table)) {
+        if (file_exists(movement_table)) {  # fs::file_exists
             ESSENTIAL_COLUMNS <- c("Subject", "Pathway", "Location", "Time_start", "Time_end")
             DATE_FORMAT <- "%Y-%m-%d"
-            movements <- read_tsv(file = pathways, show_col_types = FALSE, progress = FALSE)
+            movements <- read_tsv(file = movement_table, show_col_types = FALSE, progress = FALSE)
             if (nrow(movements) > 0 & ncol(movements) > 4) {  # The location spreadsheet must not be empty and contain at least five columns.
                 if (all(ESSENTIAL_COLUMNS %in% names(movements))) {  # Check if all essential columns are present
                     movements <- movements |>
@@ -73,7 +73,7 @@ setClass(
 )
 
 .build_pathways <- function(movements) {
-    # This function assumes rows in movements are sorted by Subject, Pathway, and Time_start in
+    # This function assumes rows in movements are sorted by Subject, Pathway ID, and Time_start in
     # an ascending order.
     pathways <- movements |> group_split(Subject)
     names(pathways) <- unique(movements$Subject)  # Named list of tibbles: one tibble per Subject

@@ -20,7 +20,7 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 16 November 2025
+#  Creation: 13 November 2025; the latest update: 6 January 2026
 
 compute_contacts <- function(pathways, dt = 3) {
     # This function creates pairwise combinations of subject names as list of two-element character vectors using the
@@ -28,7 +28,7 @@ compute_contacts <- function(pathways, dt = 3) {
     if (dt < 0) {
         stop("Error: dt cannot be negative.")
     }
-    if (length(pathways) >= 2L) {
+    if (length(pathways) > 1L) {
         subject_pairs <- combn(x = names(pathways), m = 2, simplify = FALSE)
         contacts <- list_rbind(map(subject_pairs, ~ .pairwise_contacts(.x, pathways = pathways, dt = dt)))
     } else {
@@ -58,7 +58,7 @@ compute_contacts <- function(pathways, dt = 3) {
             }
         }
     }
-    return(contacts_s1_s2)
+    return(contacts_s1_s2)  # This return variable is NULL if no contact is found.
 }
 
 setClass(
@@ -123,6 +123,7 @@ setClass(
 }
 
 .identify_contact <- function(period_1, period_2, dt) {
+    # This is a subordinate function of function .find_contacts().
     L_max <- as.integer(max(period_1@end, period_2@end) - min(period_1@start, period_2@start)) + 1  # Maximum end-to-end span of these two periods, including the gap between periods when they do not overlap.
     L12 <- period_1@length + period_2@length  # L1 + L2
     interval <- L_max - L12

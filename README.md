@@ -1,6 +1,6 @@
 # Pathopath
 
-**Patho**gen/**Patho**logical **Path**ways (PathoPath) is an R package determining direct and indirect contacts between movement pathways of subjects and building a contact network accordingly. It was developed for tracing transmission of pathogens. Subjects include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility—for instance, a single hospital or hospital network—from admission to discharge.
+**Patho**gen **Path**ways (PathoPath) is an R package determining direct and indirect contacts between movement pathways of subjects and building a contact network accordingly. It was developed for tracing transmission of pathogens. Subjects include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility—for instance, a single hospital or hospital network—from admission to discharge.
 
 Strengths of pathopath includes (1) versability—support multiple location levels (Hospital, Building, Floor, Unit, Ward, Room, Bed, *etc*) that can be specified by users; (2) generality—incorporation of patients and inanimate subjects.
 
@@ -23,7 +23,7 @@ library(pathopath)
 
 ### Where to start?
 
-Users can start with the `pathopath` function. This function integrates other functions of this package into a pipeline. It has a mandatory parameter `pathway_data` for input and an optional parameter `dt` (default value: 3) for detection of indirect contacts, which can be turned off by specifying `dt = 0`.
+Users can start with the `pathopath` function. This function integrates other functions of this package into a pipeline. It has a mandatory parameter `movement_table` for input and optional parameters `genotype_table` (default: NULL) and `dt` (default value: 3) for detection of indirect contacts, which can be turned off by specifying `dt = 0`.
 
 ```bash
 ?pathopath  # Read the function's documentation
@@ -48,20 +48,21 @@ Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/patho
 ### Use the pathopath function
 
 ```R
-pp <- pathopath(pathways = "vignettes/input_movements.tsv", dt = 3)
+pp <- pathopath(movement_table = "vignettes/input_movements.tsv", dt = 3)
 ```
 
 Users can find `demo.R` and example output files in the [vignettes](https://github.com/wanyuac/pathopath/tree/main/vignettes) directory for further details.
 
-### Use the output
+### Access the output
 
-The `pathopath` function returns an S4 Pathopath object, which comprises five data slots that can be accessed using the `@` operator (*e.g.*, `pp@contacts`) or the `slot()` function in base R \[*e.g.*, `slot(pp, "contacts")`\]. An example output can be accessed in the vignette directory ([`pp.rds`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_pp.rds)). These slots are explained below.
+The `pathopath` function returns an S4 Pathopath object, which comprises six data slots that can be accessed using the `@` operator (*e.g.*, `pp@contacts`) or the `slot()` function in base R \[*e.g.*, `slot(pp, "contacts")`\]. An example output can be accessed in the vignette directory ([`pp.rds`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_pp.rds)). These slots are explained below.
 
 * **pathways**: a list of tibbles (compatible with data frames) and named by subject identifiers. So the length of this list equals the number of unique subjects in the input TSV file. Each tibble consists of four columns—Pathway, Location, Time_start, and Time_end—from the input file. Note that the tibble of an subject may contain two or more pathways. Example data file: [`output_pathways.rds`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_pathways.rds) (use command `pathways <- readRDS("vignette/pathways.rds")` to load it into your R environment).
 * **migrations**: a tibble counting the number of location changes (migrations) in each pathway and reporting the start and end time of each pathway. It consists of five columns: Subject, Pathway, Migrations, Time_start,  and Time_end. Example: [`output_migrations.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_migrations.tsv).
 * **contacts**: a tibble of 15 columns reporting contact status (Direct/Indirect/None) between any pair of pathways at each shared location. The Length column consists of the lengths of contacts measured by days. Note that two pathways may have a direct contact at a location and an indirect contact at another location. Example: [`output_contacts.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_contacts.tsv).
 * **summary**: a tibble of 10 columns reporting the total number, length, and location numbers of direct and indirect contacts between pathways. Example: [`output_contact_summary.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_contact_summary.tsv).
 * **network**: an S4 Network object comprising two slots of tibbles: V for the node table and E for the edge table compatible with network visualisation in [Cytoscape](https://cytoscape.org/). Example: [`output_network_nodes.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_network_nodes.tsv) for V (`pp@network@V`) and [`output_network_edges.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_network_edges.tsv) for E (`pp@network@E`).
+* **parameters**: a named list storing parameters (pathways, genotypes, dt) of the pathopath function for reproducibility and recalculation for contacts.
 
 ### Detach the package after use
 
@@ -75,7 +76,7 @@ remove.packages("pathopath")  # Use this command to delete the package
 
 The functions are components of the `pathopath` function, and they can be used separately for exploration.
 
-* `read_pathways(pathways, count_migrations = TRUE)`: for importing the input TSV file of the `pathopath` function.
+* `read_pathways(movement_table, count_migrations = TRUE)`: for importing the input TSV file of the `pathopath` function.
 * `compute_contacts(pathways, dt = 3)`: for detection and quantification of direct and indirect contacts.
 * `create_network(contact_summary, genotypes)`: for converting a contact-summary table into a network object.
 

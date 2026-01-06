@@ -2,20 +2,21 @@
 #'
 #' @description This is the main function of the Pathopath package
 #'
-#' @param pathways Path to a spreadsheet of subjects' movement records arranged in pathways in the tab-delimited
-#' format. The Location column stores location accessions, which are unique identifiers of locations at a user-specified level.
-#' The pathway accessions must be unique across the input data. Note that by definition, subject and pathway accessions are in
+#' @param movement_table Path to a tab-delimited spreadsheet of subjects' movement records arranged in pathways. The Location
+#' column stores location accessions, which are unique identifiers of locations at a user-specified level. The pathway accessions
+#' must be unique across the input data. Note that by definition, subject and pathway accessions are in
 #' one-to-one mapping.
-#' @param genotypes Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
+#' @param genotype_table Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
 #' names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.
 #' @param dt Delta t, ±dt days (inclusive) to determine an indirect contact. Set it to zero to turn off the detection of
 #' indirect contacts. Default: 3.
 #'
-#' @return A Pathopath object of five slots: (1) pathways, a list of pathway tibbles named by subject names; (2) migrations,
+#' @return A Pathopath object of six slots: (1) pathways, a list of pathway tibbles named by subject names; (2) migrations,
 #' a tibble summarising the number of migrations per pathway; (3) contacts, a tibble of contact status (Direct, Indirect, and None)
 #' between pathways of different subjects across shared locations; (4) summary, a tibble summarising direct and indirect
 #' contacts for each unique combination of Subject_1, Subject_2, Pathway_1, and Pathway_2; (5) network, a Network object
-#' with two slots - V for nodes and E for edges - for exportation as node and edge tables compatible with Cytoscape.
+#' with two slots - V for nodes and E for edges - for exportation as node and edge tables compatible with Cytoscape; (6) parameters,
+#' a named list storing arguments of the pathopath function for reproducibility and recalculation for contacts.
 #'
 #' @author Yu Wan, \email{yu.wan@liverpool.ac.uk}
 #' @author Mohammad Saiful Islam Sajib, \email{saiful.sajib@chrfbd.org}
@@ -26,11 +27,11 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 12 November 2025; the latest update: 18 November 2025
+#  Creation: 12 November 2025; the latest update: 6 January 2026
 
-pathopath <- function(pathways = NULL, genotypes = NULL, dt = 3) {
+pathopath <- function(movement_table = NULL, genotype_table = NULL, dt = 3) {
     # Parse the input spreadsheet into a named list of pathways and count the number of migrations per pathway
-    pathways <- read_pathways(pathways)
+    pathways <- read_pathways(movement_table)
 
     # Identify and quantify direct and indirect contacts between pathways. The results include absence of contacts
     # between pathways because indirect contacts depend on the dt parameter.
@@ -48,9 +49,11 @@ pathopath <- function(pathways = NULL, genotypes = NULL, dt = 3) {
                migrations = pathways@migrations,
                contacts = contacts,
                summary = contact_summary,
-               network = create_network(contact_summary, genotypes)))
+               network = create_network(contact_summary, genotype_table),
+               parameters = list(movement_table = movement_table,
+                                 genotype_table = genotype_table,
+                                 dt = dt)))
 }
-
 
 # Functional modules ##########
 setClass(Class = "Network",
@@ -65,7 +68,8 @@ setClass(
         migrations = "data.frame",
         contacts = "data.frame",
         summary = "data.frame",
-        network = "Network"))
+        network = "Network",
+        parameters = "list"))
 
 .summarise_contacts <- function(contacts) {
     # This function summarises contacts for each combination of Subject_1, Subject_2, Pathway_1, and Pathway_2.
