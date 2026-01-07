@@ -4,16 +4,17 @@
 \alias{pathopath}
 \title{Construct a contact network from epidemiological data}
 \usage{
-pathopath(movement_table = NULL, genotype_table = NULL, dt = 3)
+pathopath(movements = NULL, samples = NULL, dt = 3)
 }
 \arguments{
-\item{movement_table}{Path to a tab-delimited spreadsheet of subjects' movement records arranged in pathways. The Location
+\item{movements}{Path to a tab-delimited spreadsheet of subjects' movement records arranged in pathways. The Location
 column stores location accessions, which are unique identifiers of locations at a user-specified level. The pathway accessions
 must be unique across the input data. Note that by definition, subject and pathway accessions are in
 one-to-one mapping.}
 
-\item{genotype_table}{Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
-names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.}
+\item{samples}{Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with three mandatory column
+names Sample, Subject, Pathway, Location, and Time (of sample collection), followed by variable columns of genotypes or phenotypes.
+The genotypical data will be added to node attributes for network visualisation and analysis.}
 
 \item{dt}{Delta t, ±dt days (inclusive) to determine an indirect contact. Set it to zero to turn off the detection of
 indirect contacts. Default: 3.}

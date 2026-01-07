@@ -4,9 +4,9 @@
 #' This function adds patient movements into existing results without requiring
 #' reprocessing the whole dataset.
 #'
-#' @param movement_table Path to a tab-delimited spreadsheet of new movements to be incorporated into the existing results.
-#' @param genotype_table Path to a tab-delimited spreadsheet of pathogen genotypes. Given the complexity of genotypical
-#' data, currently users need to provide curated genotypes for all samples, including previously analysed samples.
+#' @param movements Path to a tab-delimited spreadsheet of new movements to be incorporated into the existing results.
+#' @param samples Path to a tab-delimited spreadsheet of microbiological/pathological data. Given the complexity of such
+#' data, currently users need to provide curated data for all samples, including previously analysed samples.
 #' @param previous_results A previous output object of pathopath.
 #'
 #' @author Yu Wan, \email{yu.wan@liverpool.ac.uk}
@@ -18,10 +18,10 @@
 #
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 5 January 2026; the latest update: 6 January 2026
+#  Creation: 5 January 2026; the latest update: 7 January 2026
 
-add_movements <- function(movement_table = NULL, genotype_table = NULL, previous_results = NULL) {
-    new_movements <- read_pathways(movement_table)
+add_movements <- function(movements = NULL, samples = NULL, previous_results = NULL) {
+    new_movements <- read_pathways(movements)
     # To-do: QC of new data with regards to existing results
 
     # Identify and quantify contacts within the new movements
@@ -49,7 +49,8 @@ add_movements <- function(movement_table = NULL, genotype_table = NULL, previous
     contacts <- bind_rows(new_contacts_intra, bind_rows(contacts_list), previous_results@contacts) |>
         arrange(Subject_1, Subject_2, Location)
 
-    # Summarise contacts
+    # Re-summarise all contacts, which could be more efficient than meticulously updating individual rows
+    # according to updated contacts.
     contact_summary <- contacts |>
         dplyr::filter(Contact != "None") |>
         .summarise_contacts()
@@ -62,9 +63,9 @@ add_movements <- function(movement_table = NULL, genotype_table = NULL, previous
                                                       migrations_prev = previous_results@migrations),
                contacts = contacts,
                summary = contact_summary,
-               network = create_network(contact_summary, genotype_table),
-               parameters = list(movement_table = append(previous_results@parameters[["movement_table"]], movement_table),
-                                 genotype_table = genotype_table,
+               network = create_network(contact_summary, samples),
+               parameters = list(movements = append(previous_results@parameters[["movements"]], movements),
+                                 samples = samples,
                                  dt = previous_results@parameters[["dt"]])))
 }
 

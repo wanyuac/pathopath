@@ -4,17 +4,13 @@
 \alias{add_movements}
 \title{Incorporation of additional patient movements into existing results}
 \usage{
-add_movements(
-  movement_table = NULL,
-  genotype_table = NULL,
-  previous_results = NULL
-)
+add_movements(movements = NULL, samples = NULL, previous_results = NULL)
 }
 \arguments{
-\item{movement_table}{Path to a tab-delimited spreadsheet of new movements to be incorporated into the existing results.}
+\item{movements}{Path to a tab-delimited spreadsheet of new movements to be incorporated into the existing results.}
 
-\item{genotype_table}{Path to a tab-delimited spreadsheet of pathogen genotypes. Given the complexity of genotypical
-data, currently users need to provide curated genotypes for all samples, including previously analysed samples.}
+\item{samples}{Path to a tab-delimited spreadsheet of microbiological/pathological data. Given the complexity of such
+data, currently users need to provide curated data for all samples, including previously analysed samples.}
 
 \item{previous_results}{A previous output object of pathopath.}
 }

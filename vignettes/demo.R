@@ -1,7 +1,7 @@
 # Demonstration of pathopath's utility
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 16 November 2025; the latest update: 6 January 2026
+#  Creation: 16 November 2025; the latest update: 7 January 2026
 
 library(dplyr)
 library(readr)
@@ -9,7 +9,7 @@ library(tidyr)
 library(pathopath)
 
 # Section 1: build an initial contact network ###############
-pp <- pathopath(movement_table = "vignettes/input_movements.tsv", dt = 3)
+pp <- pathopath(movements = "vignettes/input_movements.tsv", dt = 3)
 
 # Explore individual slots ===============
 print(slotNames(pp))  # Five slot names
@@ -31,6 +31,6 @@ saveRDS(pp, file = "vignettes/output_pp.rds")
 saveRDS(pathways, file = "vignettes/output_pathways.rds")
 
 # Section 2: add movements to the network ###############
-updated_results <- add_movements(movement_table = "vignettes/input_movements_additional.tsv", previous_results = pp)
+updated_results <- add_movements(movements = "vignettes/input_movements_additional.tsv", previous_results = pp)
 print(slotNames(updated_results))
 saveRDS(updated_results, file = "vignettes/updated_results.rds")

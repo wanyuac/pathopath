@@ -2,12 +2,13 @@
 #'
 #' @description This is the main function of the Pathopath package
 #'
-#' @param movement_table Path to a tab-delimited spreadsheet of subjects' movement records arranged in pathways. The Location
+#' @param movements Path to a tab-delimited spreadsheet of subjects' movement records arranged in pathways. The Location
 #' column stores location accessions, which are unique identifiers of locations at a user-specified level. The pathway accessions
 #' must be unique across the input data. Note that by definition, subject and pathway accessions are in
 #' one-to-one mapping.
-#' @param genotype_table Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
-#' names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.
+#' @param samples Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with three mandatory column
+#' names Sample, Subject, Pathway, Location, and Time (of sample collection), followed by variable columns of genotypes or phenotypes.
+#' The genotypical data will be added to node attributes for network visualisation and analysis.
 #' @param dt Delta t, ±dt days (inclusive) to determine an indirect contact. Set it to zero to turn off the detection of
 #' indirect contacts. Default: 3.
 #'
@@ -27,11 +28,11 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 12 November 2025; the latest update: 6 January 2026
+#  Creation: 12 November 2025; the latest update: 7 January 2026
 
-pathopath <- function(movement_table = NULL, genotype_table = NULL, dt = 3) {
+pathopath <- function(movements = NULL, samples = NULL, dt = 3) {
     # Parse the input spreadsheet into a named list of pathways and count the number of migrations per pathway
-    pathways <- read_pathways(movement_table)
+    pathways <- read_pathways(movements)
 
     # Identify and quantify direct and indirect contacts between pathways. The results include absence of contacts
     # between pathways because indirect contacts depend on the dt parameter.
@@ -49,9 +50,9 @@ pathopath <- function(movement_table = NULL, genotype_table = NULL, dt = 3) {
                migrations = pathways@migrations,
                contacts = contacts,
                summary = contact_summary,
-               network = create_network(contact_summary, genotype_table),
-               parameters = list(movement_table = movement_table,
-                                 genotype_table = genotype_table,
+               network = create_network(contact_summary, samples),
+               parameters = list(movements = movements,
+                                 samples = samples,
                                  dt = dt)))
 }
 
@@ -72,10 +73,11 @@ setClass(
         parameters = "list"))
 
 .summarise_contacts <- function(contacts) {
-    # This function summarises contacts for each combination of Subject_1, Subject_2, Pathway_1, and Pathway_2.
-    # For each combination, it calculates the total lengths of direct and indirect contacts, respectively, according to
-    # the Length column in tibble contacts, and counts the number of unique locations where direct and indirect contacts
-    # occurred. It also counts the number of direct and indirect contacts, respectively, for each combination.
+    # This function summarises contacts at the pathway level for each combination of Subject_1, Subject_2, Pathway_1,
+    # and Pathway_2. Specifically, for each combination, it calculates the total lengths of direct and indirect contacts,
+    # respectively, according to the Length column in tibble contacts, and counts the number of unique locations where
+    # direct and indirect contacts occurred between pathways. It also counts the number of direct and indirect contacts,
+    # respectively, for each combination.
     # Columns in the output tibble:
     #  *_num: number of direct/indirect contacts
     #  *_len: total length of direct/indirect contacts
