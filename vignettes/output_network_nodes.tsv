@@ -1,13 +1,13 @@
-Pathway	Subject
-P01_01	P01
-P12_01	P12
-P20_01	P20
-P02_02	P02
-P03_01	P03
-P06_01	P06
-P15_01	P15
-P14_01	P14
-P22_01	P22
-P16_01	P16
-P24_01	P24
-P23_01	P23
+Pathway	Subject	Sample	Location	Time	Species	ST
+P01_01	P01	P01_S1	Bld1:F1:W04	2021-11-06	Klebsiella pneumoniae	16
+P02_02	P02	P02_S1	Bld1:F1:W10	2021-08-05	Klebsiella pneumoniae	16
+P03_01	P03	P03_S1	Bld1:F1:W10	2021-08-03	Klebsiella pneumoniae	16
+P06_01	P06	P06_S1	Bld1:F1:W03	2021-09-22	Klebsiella quasipneumoniae	16
+P12_01	P12	P12_S1	Bld1:F1:W04	2021-11-12	Klebsiella pneumoniae	16
+P14_01	P14	P14_S1	Bld1:F1:W05	2021-12-06	Klebsiella pneumoniae	147
+P15_01	P15	P15_S1	Bld1:F1:W07	2021-09-21	Klebsiella pneumoniae	16
+P16_01	P16	P16_S1	Bld1:F1:W01	2021-02-19	Klebsiella pneumoniae	23
+P20_01	P20	P20_S1	Bld1:F1:W07	2021-09-05	Klebsiella pneumoniae	16
+P22_01	P22	P22_S1	Bld1:F1:W05	2021-12-04	Klebsiella quasipneumoniae	147
+P23_01	P23	P23_S1	Bld1:F1:W08	2021-08-05	Klebsiella pneumoniae	16
+P24_01	P24	P24_S1	Bld1:F1:W01	2021-01-29	Klebsiella pneumoniae	23

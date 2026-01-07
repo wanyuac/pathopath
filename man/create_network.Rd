@@ -2,22 +2,25 @@
 % Please edit documentation in R/create_network.R
 \name{create_network}
 \alias{create_network}
-\title{Create a undirected Cytoscape-compatible network files from a contact summary}
+\title{Create undirected, Cytoscape-compatible network files from a contact summary}
 \usage{
-create_network(contact_summary, genotypes = NULL)
+create_network(contact_summary, samples = NULL)
 }
 \arguments{
 \item{contact_summary}{The tibble or data frame of contact summaries in pathopath's output (slot "summary").}
 
-\item{genotypes}{Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
-names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.}
+\item{samples}{Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with five mandatory columns
+Sample, Subject, Pathway, Location, and Time. Here, the Time column stores time of sample collection, and the Location column
+stores subjects' locations, which may not be the same as sample-collection sites (for example, a patient in a general ward
+may have a sputum sample take in another location). The sample data will be added to node attributes for network visualisation
+and analysis.}
 }
 \value{
 A network object with two tibble slots: V for nodes and E for edges.
 }
 \description{
 This function creates a node table and edge table that can be visualised in Cytoscape or other compatible
-software for network analysis.
+software for network analysis at the level of movement pathways.
 }
 \author{
 Yu Wan, \email{yu.wan@liverpool.ac.uk}

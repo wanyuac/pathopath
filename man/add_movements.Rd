@@ -15,8 +15,7 @@ data, currently users need to provide curated data for all samples, including pr
 \item{previous_results}{A previous output object of pathopath.}
 }
 \description{
-This function adds patient movements into existing results without requiring
-reprocessing the whole dataset.
+This function adds patient movements into existing results without requiring reprocessing the whole dataset.
 }
 \author{
 Yu Wan, \email{yu.wan@liverpool.ac.uk}

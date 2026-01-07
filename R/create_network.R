@@ -1,11 +1,12 @@
-#' @title Create a undirected Cytoscape-compatible network files from a contact summary
+#' @title Create undirected, Cytoscape-compatible network files from a contact summary
 #'
 #' @description This function creates a node table and edge table that can be visualised in Cytoscape or other compatible
-#' software for network analysis.
+#' software for network analysis at the level of movement pathways.
 #'
 #' @param contact_summary The tibble or data frame of contact summaries in pathopath's output (slot "summary").
-#' @param genotypes Optional path to a tab-delimited spreadsheet of isolates' genotypical data, with three mandatory column
-#' names Subject, Pathway, and Sample. The genotypical data will be added to node attributes for network visualisation and analysis.
+#' @param samples Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with three mandatory columns
+#' Sample, Subject, and Pathway, followed by optional variable columns such as sample metadata, genotypes, or phenotypes. The
+#' sample data will be added to node attributes for network visualisation and analysis.
 #'
 #' @return A network object with two tibble slots: V for nodes and E for edges.
 #'
@@ -22,13 +23,13 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 16 November 2025; the latest update: 18 November 2025
+#  Creation: 16 November 2025; the latest update: 7 January 2026
 
-create_network <- function(contact_summary, genotypes = NULL) {
-    # Create an undirected network of contacts between pathways, assuming pathway accessions are unique across the input tibble.
-    # To-do: genotypical data can be added by this function as node attributes in the future.
+create_network <- function(contact_summary, samples = NULL) {
+    # Create an undirected network of contacts between pathways, assuming pathway accessions are unique across
+    # the input tibble contact_summary.
+    # Create an edge table ###############
     if (nrow(contact_summary) > 0) {
-        # Create an edge table ###############
         if (any(contact_summary$Direct_contact_num > 0)) {
             edges_direct <- contact_summary |>
                 dplyr::filter(Direct_contact_num > 0) |>
@@ -63,13 +64,14 @@ create_network <- function(contact_summary, genotypes = NULL) {
                          names_pattern = "(Pathway|Subject)_(.)") |>
             distinct(Pathway, Subject)
 
-        # Incorporate user's optional genotype data ###############
-        genotypes <- .read_genotypes(genotypes)
-        if (! is.null(genotypes)) {
-            genotypes_unique <- genotypes |> distinct(Subject, Pathway, .keep_all = TRUE)  # Only select the first row for duplicated combinations of Subject and Pathway
+        # Incorporate microbiological/pathological data as node attributes ###############
+        # This algorithm assumes a single sample per pathway.
+        samples <- .read_samples(samples)  # Returns NULL if parameter samples = NULL
+        if (! is.null(samples)) {
+            samples_unique <- samples |> distinct(Subject, Pathway, .keep_all = TRUE)  # Only select the first row for duplicated combinations of Subject and Pathway
             nodes <- nodes |>
-                left_join(genotypes_unique, by = c("Subject", "Pathway")) |>
-                arrange(Pathway, Subject)
+                left_join(samples_unique, by = c("Subject", "Pathway")) |>
+                arrange(Pathway, Subject)  # Incorporate sample information as node attributes, while edges are kept unchanged
         }
     } else {
         edges <- tibble()
@@ -78,25 +80,25 @@ create_network <- function(contact_summary, genotypes = NULL) {
     return(new("Network", V = nodes, E = edges))
 }
 
-.read_genotypes <- function(genotype_data = NULL) {
-    if (! is.null(genotype_data)) {
-        if (file_exists(genotype_data)) {
+.read_samples <- function(sample_data = NULL) {
+    if (! is.null(sample_data)) {
+        if (file_exists(sample_data)) {
             ESSENTIAL_COLUMNS <- c("Sample", "Subject", "Pathway")
-            genotype_table <- read_tsv(file = genotype_data, show_col_types = FALSE, progress = FALSE)
-            if (nrow(genotype_table) > 0 & ncol(genotype_table) >3) {
-                if (all(ESSENTIAL_COLUMNS %in% names(genotype_table))) {
-                    genotypes <- genotype_table[, c(ESSENTIAL_COLUMNS, setdiff(names(genotype_table), ESSENTIAL_COLUMNS))]
+            sample_table <- read_tsv(file = sample_data, show_col_types = FALSE, progress = FALSE)
+            if (nrow(sample_table) > 0 & ncol(sample_table) >3) {
+                if (all(ESSENTIAL_COLUMNS %in% names(sample_table))) {
+                    samples <- sample_table[, c(ESSENTIAL_COLUMNS, setdiff(names(sample_table), ESSENTIAL_COLUMNS))]
                 } else {
-                    genotypes <- NULL  # Not all essential columns are present in the input spreadsheet
+                    samples <- NULL  # Not all essential columns are present in the input spreadsheet
                 }
             } else {
-                genotypes <- NULL
+                samples <- NULL
             }
         } else {
-            genotypes <- NULL  # The input file does not exist.
+            samples <- NULL  # The input file does not exist.
         }
     } else {
-        genotypes <- NULL
+        samples <- NULL
     }
-    return(genotypes)
+    return(samples)
 }

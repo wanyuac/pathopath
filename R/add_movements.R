@@ -1,8 +1,7 @@
 #' @title Incorporation of additional patient movements into existing results
 #'
 #' @description
-#' This function adds patient movements into existing results without requiring
-#' reprocessing the whole dataset.
+#' This function adds patient movements into existing results without requiring reprocessing the whole dataset.
 #'
 #' @param movements Path to a tab-delimited spreadsheet of new movements to be incorporated into the existing results.
 #' @param samples Path to a tab-delimited spreadsheet of microbiological/pathological data. Given the complexity of such
@@ -55,7 +54,9 @@ add_movements <- function(movements = NULL, samples = NULL, previous_results = N
         dplyr::filter(Contact != "None") |>
         .summarise_contacts()
 
-    # Update previous results with new information
+    # Update previous results with new information. Here, the whole network is regenerated for simplicity
+    # rather than modifying some edges and nodes according to updated contacts, because the network
+    # generation is computationally light.
     return(new("Pathopath",
                pathways = .combine_pathways(pathways_add = new_movements@pathways,
                                             pathways_prev = previous_results@pathways),

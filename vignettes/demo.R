@@ -9,7 +9,9 @@ library(tidyr)
 library(pathopath)
 
 # Section 1: build an initial contact network ###############
-pp <- pathopath(movements = "vignettes/input_movements.tsv", dt = 3)
+pp <- pathopath(movements = "vignettes/input_movements.tsv",
+                samples = "vignettes/input_samples.tsv",
+                dt = 3)
 
 # Explore individual slots ===============
 print(slotNames(pp))  # Five slot names
@@ -31,6 +33,9 @@ saveRDS(pp, file = "vignettes/output_pp.rds")
 saveRDS(pathways, file = "vignettes/output_pathways.rds")
 
 # Section 2: add movements to the network ###############
-pp_updated <- add_movements(movements = "vignettes/input_movements_additional.tsv", previous_results = pp)
+pp_updated <- add_movements(movements = "vignettes/input_movements_additional.tsv",
+                            samples = "vignettes/input_samples_updated.tsv",
+                            previous_results = pp)
 print(slotNames(pp_updated))
 saveRDS(pp_updated, file = "vignettes/output_pp_updated.rds")
+View(pp_updated@network@V)
