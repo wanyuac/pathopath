@@ -31,6 +31,6 @@ saveRDS(pp, file = "vignettes/output_pp.rds")
 saveRDS(pathways, file = "vignettes/output_pathways.rds")
 
 # Section 2: add movements to the network ###############
-updated_results <- add_movements(movements = "vignettes/input_movements_additional.tsv", previous_results = pp)
-print(slotNames(updated_results))
-saveRDS(updated_results, file = "vignettes/updated_results.rds")
+pp_updated <- add_movements(movements = "vignettes/input_movements_additional.tsv", previous_results = pp)
+print(slotNames(pp_updated))
+saveRDS(pp_updated, file = "vignettes/output_pp_updated.rds")

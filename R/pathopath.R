@@ -14,10 +14,10 @@
 #'
 #' @return A Pathopath object of six slots: (1) pathways, a list of pathway tibbles named by subject names; (2) migrations,
 #' a tibble summarising the number of migrations per pathway; (3) contacts, a tibble of contact status (Direct, Indirect, and None)
-#' between pathways of different subjects across shared locations; (4) summary, a tibble summarising direct and indirect
-#' contacts for each unique combination of Subject_1, Subject_2, Pathway_1, and Pathway_2; (5) network, a Network object
-#' with two slots - V for nodes and E for edges - for exportation as node and edge tables compatible with Cytoscape; (6) parameters,
-#' a named list storing arguments of the pathopath function for reproducibility and recalculation for contacts.
+#' between pathways of different subjects across shared locations; (4) summary, a tibble summarising pathway-level direct and indirect
+#' contacts for each unique combination of Subject_1, Subject_2, Pathway_1, and Pathway_2; (5) network, a Network object with two slots
+#' - V for nodes and E for edges - for exportation as node and edge tables compatible with Cytoscape; (6) parameters, a named list
+#' storing arguments of the pathopath function for reproducibility and recalculation for contacts.
 #'
 #' @author Yu Wan, \email{yu.wan@liverpool.ac.uk}
 #' @author Mohammad Saiful Islam Sajib, \email{saiful.sajib@chrfbd.org}
