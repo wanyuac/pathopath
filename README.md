@@ -29,29 +29,65 @@ Users can start with the `pathopath` function. This function integrates other fu
 ?pathopath  # Read the function's documentation
 ```
 
-### Prepare the input file
+### Prepare input files
 
-So far the `pathopath` function takes as input a single TSV file of five columns: *Subject*, *Pathway*, *Location*, *Time_start*, and *Time_end*.
+The main function `pathopath` takes as input two tab-separated values (TSV) files (Figure 1):
+
+* (Mandatory) movement table
+* (Optional) sample metadata
+
+![example_input_movements](figures\example_input_movements.png)
+
+**Figure 1**. Example input data for function `pathopath`.
+
+#### Mandatory movement spreadsheet
+
+The `pathopath` function takes as input a mandatory TSV file reflecting movements. This file comprises five columns *Subject*, *Pathway*, *Location*, *Time_start*, and *Time_end*, and its path of access is provided to the `movements` parameter of the `pathopath` function. Any incorrect names or absence of the mandatory columns will cause the function to stop with an error message.
 
 * **Subject**: unique subject identifiers, for example, anonymised patient IDs  
 * **Pathway**: unique pathway identifiers, commonly known as admission accessions in electronic healthcare records  
 * **Location**: unique location identifiers. Users can maintain a separate spreadsheet linking these identifiers to any specific location level (Hospital, Building, Floor, Ward, Unit, Bed, _etc_).  
-* **Time_start** and **Time_end**: time stamps following the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format (YYYY-MM-DD). Pathopath current only supports dates.  
+* **Time_start** and **Time_end**: timestamps following the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format (YYYY-MM-DD) (Figure 2). Pathopath current only supports dates.  
 
-Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/input_movements_template.tsv) for a template of this input file. Additional columns will not be processed by the function. An example input file is accessible in the vignette directory ([`input_movements.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/input_movements.tsv)).
+Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/input_movements_template.tsv) for a template of this input file. Additional columns will not be processed by the function. An example input file is accessible in the vignette directory ([`input_movements.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/input_movements.tsv)), and users can use the template file `template_input_movements.tsv` in the vignette directory for creating the input movement spreadsheet.
 
-**Limitations**
+#### Recording movements with timestamps
 
-* Any missing values ("" or NA) in the input file will break the pathopath pipeline.  
-* Any incorrect column names or missing columns will cause the function to stop with an error message.  
+![timestamps](figures\timestamps.png)
+
+**Figure 2**. Recording movements of subjects by combination of timestamps and location information.
+
+#### Requirements for the quality of input movement data
+
+* **Location uniqueness**: Locations within the same movement pathway must be temporally separate, since any subject cannot be in two physical locations at the same time.
+* **Pathway integrity**: No time gap between consecutive locations in the same pathway. For example, when timestamps are recorded as dates, Time\_end of the previous location and Time\_start of the next location should differ by at most one day (same date: same-day transfer; differ by one day: next-day transfer).
+* **Pathway uniqueness**: Periods of pathways of the same patient must not overlap, in other words, be temporally separate. When timestamps are recorded as dates, the last day of the previous pathway and the first day of the next pathway must differ by at least one day—for example, a patient is discharged on Day 1 and readmitted on Day 2.
+
+#### Optional sample spreadsheet
+
+Users can also provide the path of an optional TSV-formatted sample spreadsheet to the `pathopath` function using its `samples` parameter. This file comprises three mandatory columns (*Sample*, *Subject*, and *Pathway*) followed by additional data columns of any R-compatible names.
+
+This sample spreadsheet will be merged into the output network as node attributes (see function `create_network`). Sample data of subjects or pathways that are not present in the network will be discarded.
 
 ### Use the pathopath function
 
 ```R
-pp <- pathopath(movement_table = "vignettes/input_movements.tsv", dt = 3)
+pp <- pathopath(movements = "vignettes/input_movements.tsv", samples = "vignettes/input_samples.tsv", dt = 3)
 ```
 
 Users can find `demo.R` and example output files in the [vignettes](https://github.com/wanyuac/pathopath/tree/main/vignettes) directory for further details.
+
+#### Workflow
+
+![workflow](figures\workflow.png)
+
+**Figure 3**. Workflow of the `pathopath` function.
+
+#### Definition of contacts
+
+![definition_of_contacts](figures\definition_of_contacts.png)
+
+**Figure 4**. Definition of direct and indirect contacts between three subjects S<sub>1</sub>, S<sub>2</sub>, and S<sub>3</sub>. The time of a direct contact and indirect contact is denoted by t<sub>d</sub> and t<sub>i</sub>, respectively, while Δt denotes the `dt` parameter of the `pathopath` function.
 
 ### Access the output
 
@@ -84,7 +120,11 @@ The functions are components of the `pathopath` function, and they can be used s
 
 ### What if some subjects have more than one microbiological samples?
 
+Users can create customised networks from such sample data and the contact table in pathopath's output (slot `@contacts`) to incorporate additional sample information.
 
+### Do pathway identifiers have to be unique across the input data?
+
+No, although it is a good practice to make pathway identifiers unique across the input data. Nonetheless, pathway identifiers must be unique for pathways of the same subject.
 
 ## 5. Appendix
 
