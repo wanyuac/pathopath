@@ -36,7 +36,7 @@ The main function `pathopath` takes as input two tab-separated values (TSV) file
 * (Mandatory) movement table
 * (Optional) sample metadata
 
-![example_input_movements](figures\example_input_movements.png)
+![example_input_movements](figures/example_input_movements.png)
 
 **Figure 1**. Example input data for function `pathopath`.
 
@@ -53,7 +53,7 @@ Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/patho
 
 #### Recording movements with timestamps
 
-![timestamps](figures\timestamps.png)
+![timestamps](figures/timestamps.png)
 
 **Figure 2**. Recording movements of subjects by combination of timestamps and location information.
 
@@ -79,13 +79,13 @@ Users can find `demo.R` and example output files in the [vignettes](https://gith
 
 #### Workflow
 
-![workflow](figures\workflow.png)
+![workflow](figures/workflow.png)
 
 **Figure 3**. Workflow of the `pathopath` function.
 
 #### Definition of contacts
 
-![definition_of_contacts](figures\definition_of_contacts.png)
+![definition_of_contacts](figures/definition_of_contacts.png)
 
 **Figure 4**. Definition of direct and indirect contacts between three subjects S<sub>1</sub>, S<sub>2</sub>, and S<sub>3</sub>. The time of a direct contact and indirect contact is denoted by t<sub>d</sub> and t<sub>i</sub>, respectively, while Δt denotes the `dt` parameter of the `pathopath` function.
 
