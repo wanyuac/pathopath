@@ -59,6 +59,7 @@ Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/patho
 
 ##### Assessment of the quality of input movement data
 
+* `Time_start` must not exceed `Time_end` at each location.
 * **Location uniqueness**: Locations within the same movement pathway must be temporally separate, since any subject cannot be in two physical locations at the same time.
 * **Pathway integrity**: No time gap between consecutive locations in the same pathway. For example, when timestamps are recorded as dates, Time\_end of the previous location and Time\_start of the next location should differ by at most one day (same date: same-day transfer; differ by one day: next-day transfer).
 * **Pathway uniqueness**: Periods of pathways of the same patient must not overlap, in other words, be temporally separate. When timestamps are recorded as dates, the last day of the previous pathway and the first day of the next pathway must differ by at least one day—for example, a patient is discharged on Day 1 and readmitted on Day 2.
@@ -114,6 +115,8 @@ remove.packages("pathopath")  # Use this command to delete the package
 
 ## 3. Helper functions
 
+#### 3.1. Overview
+
 The functions are components of the `pathopath` function, and they can be used separately for exploration.
 
 * `read_pathways(movement_table, count_migrations = TRUE)` imports the input TSV file of the `pathopath` function.
@@ -121,6 +124,24 @@ The functions are components of the `pathopath` function, and they can be used s
 * `create_network(contact_summary, genotypes)` converts a contact-summary table into a network object.
 * `assess_pathways(pathways)` evaluates the quality of movement data under three criteria (location uniqueness, pathway integrity, and pathway uniqueness) described in the previous Subsection "Assessment of the quality of input movement data".
 * `add_movements(movements = NULL, samples = NULL, previous_results = NULL)`: Incorporates additional patient movements into existing results without recomputing contacts.
+
+#### 3.2. An example of incorrect input pathway data
+
+Command `incorrect_pathways <- read_pathways(movement_table = "vignettes/input_movements_with_mistakes.tsv")` in `vignettes/demo.R` demonstrates some error messages from function `assess_pathways` when handling input data with erroneous  pathway information:
+
+* Lines 6–7: Time gap between 2021-08-25 and 2021-08-27 when patient P02 moved from location Bld1:F1:W10 to Bld1:F1:W03 in pathway P02\_02.
+* Line 30: time start (2021-12-25) > time end (2021-12-17) for Patient P20's presence at location Bld1:F1:W04.
+
+The error messages are:
+
+```text
+Error in read_pathways(movement_table = "vignettes/input_movements_with_mistakes.tsv") : 
+  Error: one or multiple incorrect pathways are identified.
+In addition: Warning messages:
+1: Error: at least one time gap between consecutive locations are identified in pathway P02_02 of subject P02. 
+2: Error: Time_start at location Bld1:F1:W04 in pathway P20_01 of subject P20 exceeds Time_end. 
+3: Error: at least one time gap between consecutive locations are identified in pathway P02_02 of subject P20. 
+```
 
 ## 4. FAQs
 

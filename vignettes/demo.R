@@ -39,3 +39,6 @@ pp_updated <- add_movements(movements = "vignettes/input_movements_additional.ts
 print(slotNames(pp_updated))
 saveRDS(pp_updated, file = "vignettes/output_pp_updated.rds")
 View(pp_updated@network@V)
+
+# Section 3: demonstrate error messages from the quality assessment of input movement data ###############
+incorrect_pathways <- read_pathways(movement_table = "vignettes/input_movements_with_mistakes.tsv")

@@ -17,11 +17,19 @@
 #
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 5 January 2026; the latest update: 7 January 2026
+#  Creation: 5 January 2026; the latest update: 9 January 2026
 
 add_movements <- function(movements = NULL, samples = NULL, previous_results = NULL) {
+    # Because read_pathways assesses the quality of input data, add_movements stops
+    # if pathways in the new dataset contain time gaps between consecutive locations
+    # or incorrect timestamps (namely, start time > end time at any location).
     new_movements <- read_pathways(movements)
-    # To-do: QC of new data with regards to existing results
+
+    # Further quality assessment: check if there is any problem in the combined pathway data
+    combined_pathways <- .combine_pathways(pathways_add = new_movements@pathways, pathways_prev = previous_results@pathways)
+    if (! assess_pathways(combined_pathways)) {
+        stop("Error: one or multiple incorrect pathways in the combined pathway data are identified.")
+    }
 
     # Identify and quantify contacts within the new movements
     if (length(new_movements@pathways) > 1L) {
@@ -58,8 +66,7 @@ add_movements <- function(movements = NULL, samples = NULL, previous_results = N
     # rather than modifying some edges and nodes according to updated contacts, because the network
     # generation is computationally light.
     return(new("Pathopath",
-               pathways = .combine_pathways(pathways_add = new_movements@pathways,
-                                            pathways_prev = previous_results@pathways),
+               pathways = combined_pathways,
                migrations = .update_migration_summary(migrations_add = new_movements@migrations,
                                                       migrations_prev = previous_results@migrations),
                contacts = contacts,

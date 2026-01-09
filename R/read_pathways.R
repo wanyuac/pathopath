@@ -24,7 +24,7 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 6 January 2026
+#  Creation: 13 November 2025; the latest update: 9 January 2026
 
 read_pathways <- function(movement_table, count_migrations = TRUE) {
     if (! is.null(movement_table)) {
@@ -42,6 +42,9 @@ read_pathways <- function(movement_table, count_migrations = TRUE) {
                         ) |>
                         arrange(Subject, Pathway, Time_start)  # Sort rows by these three columns in an ascending order
                     pathways <- .build_pathways(movements)
+                    if (! assess_pathways(pathways)) {
+                        stop("Error: one or multiple incorrect pathways are identified.")
+                    }
                     if (count_migrations) {
                         migrations <- .summarise_migrations(movements)
                     } else {
@@ -78,7 +81,7 @@ setClass(
     pathways <- movements |> group_split(Subject)
     names(pathways) <- unique(movements$Subject)  # Named list of tibbles: one tibble per Subject
     pathways <- lapply(pathways, function(df) select(df, -Subject))  # Drop the redundant Subject column from each tibble
-    return(pathways)  # To-do: quality check of pathways (e.g., not gaps or conflicts in time while accounting for Admission)
+    return(pathways)
 }
 
 .summarise_migrations <- function(movements) {

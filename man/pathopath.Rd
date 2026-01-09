@@ -12,11 +12,9 @@ column stores location accessions, which are unique identifiers of locations at 
 must be unique across the input data. Note that by definition, subject and pathway accessions are in
 one-to-one mapping.}
 
-\item{samples}{Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with five mandatory columns
-Sample, Subject, Pathway, Location, and Time, followed by variable columns of genotypes or phenotypes. Here, the Time column
-stores time of sample collection, and the Location column stores subjects' locations, which may not be the same as sample-
-collection sites (for example, a patient in a general ward may have a sputum sample take in another location). The sample data
-will be added to node attributes for network visualisation and analysis.}
+\item{samples}{Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with three mandatory columns
+Sample, Subject, Pathway, followed by optional variable columns such as sample metadata, genotypes, or phenotypes.The sample
+data will be added to node attributes for network visualisation and analysis.}
 
 \item{dt}{Delta t, ±dt days (inclusive) to determine an indirect contact. Set it to zero to turn off the detection of
 indirect contacts. Default: 3.}

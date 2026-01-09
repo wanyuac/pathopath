@@ -9,11 +9,9 @@ create_network(contact_summary, samples = NULL)
 \arguments{
 \item{contact_summary}{The tibble or data frame of contact summaries in pathopath's output (slot "summary").}
 
-\item{samples}{Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with five mandatory columns
-Sample, Subject, Pathway, Location, and Time. Here, the Time column stores time of sample collection, and the Location column
-stores subjects' locations, which may not be the same as sample-collection sites (for example, a patient in a general ward
-may have a sputum sample take in another location). The sample data will be added to node attributes for network visualisation
-and analysis.}
+\item{samples}{Optional path to a tab-delimited spreadsheet of microbiological/pathological data, with three mandatory columns
+Sample, Subject, and Pathway, followed by optional variable columns such as sample metadata, genotypes, or phenotypes. The
+sample data will be added to node attributes for network visualisation and analysis.}
 }
 \value{
 A network object with two tibble slots: V for nodes and E for edges.
