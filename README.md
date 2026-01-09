@@ -38,7 +38,7 @@ The main function `pathopath` takes as input two tab-separated values (TSV) file
 
 ![example_input_movements](figures/example_input_movements.png)
 
-**Figure 1**. Example input data for function `pathopath`.
+**Figure 1**. Example input movement data for the `pathopath` function. Such data can be extracted from electronic health records.
 
 #### Mandatory movement spreadsheet
 
@@ -63,11 +63,15 @@ Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/patho
 * **Pathway integrity**: No time gap between consecutive locations in the same pathway. For example, when timestamps are recorded as dates, Time\_end of the previous location and Time\_start of the next location should differ by at most one day (same date: same-day transfer; differ by one day: next-day transfer).
 * **Pathway uniqueness**: Periods of pathways of the same patient must not overlap, in other words, be temporally separate. When timestamps are recorded as dates, the last day of the previous pathway and the first day of the next pathway must differ by at least one day—for example, a patient is discharged on Day 1 and readmitted on Day 2.
 
-#### Optional sample spreadsheet
+#### Optional spreadsheet of sample metadata
 
 Users can also provide the path of an optional TSV-formatted sample spreadsheet to the `pathopath` function using its `samples` parameter. This file comprises three mandatory columns (*Sample*, *Subject*, and *Pathway*) followed by additional data columns of any R-compatible names.
 
 This sample spreadsheet will be merged into the output network as node attributes (see function `create_network`). Sample data of subjects or pathways that are not present in the network will be discarded.
+
+![example_input_metadata](figures/example_input_metadata.png)
+
+**Figure 3**. Example input sample metadata for the `pathopath` function.
 
 ### Use the pathopath function
 
@@ -81,13 +85,13 @@ Users can find `demo.R` and example output files in the [vignettes](https://gith
 
 ![workflow](figures/workflow.png)
 
-**Figure 3**. Workflow of the `pathopath` function.
+**Figure 4**. Workflow of the `pathopath` function.
 
 #### Definition of contacts
 
 ![definition_of_contacts](figures/definition_of_contacts.png)
 
-**Figure 4**. Definition of direct and indirect contacts between three subjects S<sub>1</sub>, S<sub>2</sub>, and S<sub>3</sub>. The time of a direct contact and indirect contact is denoted by t<sub>d</sub> and t<sub>i</sub>, respectively, while Δt denotes the `dt` parameter of the `pathopath` function.
+**Figure 5**. Definition of direct and indirect contacts between three subjects S<sub>1</sub>, S<sub>2</sub>, and S<sub>3</sub>. The time of a direct contact and indirect contact is denoted by t<sub>d</sub> and t<sub>i</sub>, respectively, while Δt denotes the `dt` parameter of the `pathopath` function.
 
 ### Access the output
 
@@ -112,9 +116,10 @@ remove.packages("pathopath")  # Use this command to delete the package
 
 The functions are components of the `pathopath` function, and they can be used separately for exploration.
 
-* `read_pathways(movement_table, count_migrations = TRUE)`: for importing the input TSV file of the `pathopath` function.
-* `compute_contacts(pathways, dt = 3)`: for detection and quantification of direct and indirect contacts.
-* `create_network(contact_summary, genotypes)`: for converting a contact-summary table into a network object.
+* `read_pathways(movement_table, count_migrations = TRUE)` imports the input TSV file of the `pathopath` function.
+* `compute_contacts(pathways, dt = 3)` detects and quantifies direct and indirect contacts.
+* `create_network(contact_summary, genotypes)`: Converts a contact-summary table into a network object.
+* `add_movements(movements = NULL, samples = NULL, previous_results = NULL)`: Incorporates additional patient movements into existing results without recomputing contacts.
 
 ## 4. FAQs
 
