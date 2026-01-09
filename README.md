@@ -15,13 +15,13 @@ install.packages("pathopath_0.0.1.tar.gz", repos = NULL, type = "source", depend
 
 ## 2. Usage
 
-### Load the package
+### 2.1. Load the package
 
 ```R
 library(pathopath)
 ```
 
-### Where to start?
+### 2.2. Where to start?
 
 Users can start with the `pathopath` function. This function integrates other functions of this package into a pipeline. It has a mandatory parameter `movement_table` for input and optional parameters `genotype_table` (default: NULL) and `dt` (default value: 3) for detection of indirect contacts, which can be turned off by specifying `dt = 0`.
 
@@ -29,7 +29,7 @@ Users can start with the `pathopath` function. This function integrates other fu
 ?pathopath  # Read the function's documentation
 ```
 
-### Prepare input files
+### 2.3. Prepare input files
 
 The main function `pathopath` takes as input two tab-separated values (TSV) files (Figure 1):
 
@@ -40,7 +40,7 @@ The main function `pathopath` takes as input two tab-separated values (TSV) file
 
 **Figure 1**. Example input movement data for the `pathopath` function. Such data can be extracted from electronic health records.
 
-#### Mandatory movement spreadsheet
+#### 2.3.1. Mandatory movement spreadsheet
 
 The `pathopath` function takes as input a mandatory TSV file reflecting movements. This file comprises five columns *Subject*, *Pathway*, *Location*, *Time_start*, and *Time_end*, and its path of access is provided to the `movements` parameter of the `pathopath` function. Any incorrect names or absence of the mandatory columns will cause the function to stop with an error message.
 
@@ -51,19 +51,19 @@ The `pathopath` function takes as input a mandatory TSV file reflecting movement
 
 Users can find [`input_movements_template.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/input_movements_template.tsv) for a template of this input file. Additional columns will not be processed by the function. An example input file is accessible in the vignette directory ([`input_movements.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/input_movements.tsv)), and users can use the template file `template_input_movements.tsv` in the vignette directory for creating the input movement spreadsheet.
 
-#### Recording movements with timestamps
+##### Recording movements with timestamps
 
 ![timestamps](figures/timestamps.png)
 
 **Figure 2**. Recording movements of subjects by combination of timestamps and location information.
 
-#### Requirements for the quality of input movement data
+##### Assessment of the quality of input movement data
 
 * **Location uniqueness**: Locations within the same movement pathway must be temporally separate, since any subject cannot be in two physical locations at the same time.
 * **Pathway integrity**: No time gap between consecutive locations in the same pathway. For example, when timestamps are recorded as dates, Time\_end of the previous location and Time\_start of the next location should differ by at most one day (same date: same-day transfer; differ by one day: next-day transfer).
 * **Pathway uniqueness**: Periods of pathways of the same patient must not overlap, in other words, be temporally separate. When timestamps are recorded as dates, the last day of the previous pathway and the first day of the next pathway must differ by at least one day—for example, a patient is discharged on Day 1 and readmitted on Day 2.
 
-#### Optional spreadsheet of sample metadata
+#### 2.3.2. Optional spreadsheet of sample metadata
 
 Users can also provide the path of an optional TSV-formatted sample spreadsheet to the `pathopath` function using its `samples` parameter. This file comprises three mandatory columns (*Sample*, *Subject*, and *Pathway*) followed by additional data columns of any R-compatible names.
 
@@ -73,7 +73,7 @@ This sample spreadsheet will be merged into the output network as node attribute
 
 **Figure 3**. Example input sample metadata for the `pathopath` function.
 
-### Use the pathopath function
+### 2.4. Use the pathopath function
 
 ```R
 pp <- pathopath(movements = "vignettes/input_movements.tsv", samples = "vignettes/input_samples.tsv", dt = 3)
@@ -81,19 +81,19 @@ pp <- pathopath(movements = "vignettes/input_movements.tsv", samples = "vignette
 
 Users can find `demo.R` and example output files in the [vignettes](https://github.com/wanyuac/pathopath/tree/main/vignettes) directory for further details.
 
-#### Workflow
+#### 2.4.1. Workflow
 
 ![workflow](figures/workflow.png)
 
 **Figure 4**. Workflow of the `pathopath` function.
 
-#### Definition of contacts
+#### 2.4.2. Definition of contacts
 
 ![definition_of_contacts](figures/definition_of_contacts.png)
 
 **Figure 5**. Definition of direct and indirect contacts between three subjects S<sub>1</sub>, S<sub>2</sub>, and S<sub>3</sub>. The time of a direct contact and indirect contact is denoted by t<sub>d</sub> and t<sub>i</sub>, respectively, while Δt denotes the `dt` parameter of the `pathopath` function.
 
-### Access the output
+### 2.5. Access the output
 
 The `pathopath` function returns an S4 Pathopath object, which comprises six data slots that can be accessed using the `@` operator (*e.g.*, `pp@contacts`) or the `slot()` function in base R \[*e.g.*, `slot(pp, "contacts")`\]. An example output can be accessed in the vignette directory ([`pp.rds`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_pp.rds)). These slots are explained below.
 
@@ -104,7 +104,7 @@ The `pathopath` function returns an S4 Pathopath object, which comprises six dat
 * **network**: an S4 Network object comprising two slots of tibbles: V for the node table and E for the edge table compatible with network visualisation in [Cytoscape](https://cytoscape.org/). Example: [`output_network_nodes.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_network_nodes.tsv) for V (`pp@network@V`) and [`output_network_edges.tsv`](https://github.com/wanyuac/pathopath/blob/main/vignettes/output_network_edges.tsv) for E (`pp@network@E`).
 * **parameters**: a named list storing parameters (pathways, genotypes, dt) of the pathopath function for reproducibility and recalculation for contacts.
 
-### Detach the package after use
+### 2.6. Detach the package after use
 
 ```R
 detach(name = "package:pathopath", unload = TRUE)  # The package can be reloaded using the library() function.
@@ -118,26 +118,27 @@ The functions are components of the `pathopath` function, and they can be used s
 
 * `read_pathways(movement_table, count_migrations = TRUE)` imports the input TSV file of the `pathopath` function.
 * `compute_contacts(pathways, dt = 3)` detects and quantifies direct and indirect contacts.
-* `create_network(contact_summary, genotypes)`: Converts a contact-summary table into a network object.
+* `create_network(contact_summary, genotypes)` converts a contact-summary table into a network object.
+* `assess_pathways(pathways)` evaluates the quality of movement data under three criteria (location uniqueness, pathway integrity, and pathway uniqueness) described in the previous Subsection "Assessment of the quality of input movement data".
 * `add_movements(movements = NULL, samples = NULL, previous_results = NULL)`: Incorporates additional patient movements into existing results without recomputing contacts.
 
 ## 4. FAQs
 
-### What if some subjects have more than one microbiological samples?
+### 4.1. What if some subjects have more than one microbiological samples?
 
 Users can create customised networks from such sample data and the contact table in pathopath's output (slot `@contacts`) to incorporate additional sample information.
 
-### Do pathway identifiers have to be unique across the input data?
+### 4.2. Do pathway identifiers have to be unique across the input data?
 
 No, although it is a good practice to make pathway identifiers unique across the input data. Nonetheless, pathway identifiers must be unique for pathways of the same subject.
 
 ## 5. Appendix
 
-### Citation
+### 5.1. Citation
 
 Wan Y, Sajib MSI. Pathopath. https://github.com/wanyuac/pathopath (2025).
 
-### Funding sources
+### 5.2. Funding sources
 
 * NIHR Global Health Research Development Award to the Child Health Research Foundation in Bangladesh.
 * David Price Evans Research Fellowship to Yu Wan.
