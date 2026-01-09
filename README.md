@@ -115,7 +115,7 @@ remove.packages("pathopath")  # Use this command to delete the package
 
 ## 3. Helper functions
 
-#### 3.1. Overview
+### 3.1. Overview
 
 The functions are components of the `pathopath` function, and they can be used separately for exploration.
 
@@ -125,7 +125,7 @@ The functions are components of the `pathopath` function, and they can be used s
 * `assess_pathways(pathways)` evaluates the quality of movement data under three criteria (location uniqueness, pathway integrity, and pathway uniqueness) described in the previous Subsection "Assessment of the quality of input movement data".
 * `add_movements(movements = NULL, samples = NULL, previous_results = NULL)`: Incorporates additional patient movements into existing results without recomputing contacts.
 
-#### 3.2. An example of incorrect input pathway data
+### 3.2. An example of incorrect input pathway data
 
 Command `incorrect_pathways <- read_pathways(movement_table = "vignettes/input_movements_with_mistakes.tsv")` in `vignettes/demo.R` demonstrates some error messages from function `assess_pathways` when handling input data with erroneous  pathway information:
 
