@@ -1,7 +1,7 @@
 # Demonstration of pathopath's utility
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 16 November 2025; the latest update: 7 January 2026
+#  Creation: 16 November 2025; the latest update: 14 January 2026
 
 library(dplyr)
 library(readr)
@@ -14,7 +14,7 @@ pp <- pathopath(movements = "vignettes/input_movements.tsv",
                 dt = 3)
 
 # Explore individual slots ===============
-print(slotNames(pp))  # Five slot names
+print(slotNames(pp))  # Six slot names
 
 pathways <- pp@pathways
 migrations <- pp@migrations
@@ -36,7 +36,7 @@ saveRDS(pathways, file = "vignettes/output_pathways.rds")
 pp_updated <- add_movements(movements = "vignettes/input_movements_additional.tsv",
                             samples = "vignettes/input_samples_updated.tsv",
                             previous_results = pp)
-print(slotNames(pp_updated))
+print(slotNames(pp_updated))  # Six slot names
 saveRDS(pp_updated, file = "vignettes/output_pp_updated.rds")
 View(pp_updated@network@V)
 
