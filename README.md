@@ -1,7 +1,6 @@
 # Pathopath
 
-<img width="3738" height="1120" alt="Pathopath" src="https://github.com/user-attachments/assets/fa349c4d-984a-40f1-80de-054b745c06b3" />
-
+<img src="figures/pathopath_logo.png" style="width: 50%; height: auto;" alt="Pathopath logo" />
 
 **Patho**gen **Path**ways (PathoPath) is an R package determining direct and indirect contacts between movement pathways of subjects and building a contact network accordingly. It was developed for tracing transmission of pathogens. Subjects include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility—for instance, a single hospital or hospital network—from admission to discharge.
 
