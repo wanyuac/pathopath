@@ -1,7 +1,7 @@
 Package: pathopath
 Type: Package
 Title: Network-based epidemiological analysis
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: c(
     person(
       "Yu", "Wan",
@@ -19,7 +19,6 @@ Description: More about what it does (maybe more than one line).
 License: GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
 Imports:
     dplyr,
     readr,
@@ -27,3 +26,4 @@ Imports:
     stringr,
     purrr,
     tibble
+Config/roxygen2/version: 8.0.0

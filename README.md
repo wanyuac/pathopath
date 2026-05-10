@@ -12,7 +12,7 @@ Strengths of pathopath includes (1) versability—support multiple location leve
 2. Install the pathopath package in R using the following command and following prompts to install dependencies (R packages dplyr, readr, fs, stringr, tibble, and purrr) that are not previously installed.
 
 ```r
-install.packages("pathopath_0.0.1.tar.gz", repos = NULL, type = "source", dependencies = TRUE)
+install.packages("pathopath_0.0.3.tar.gz", repos = NULL, type = "source", dependencies = TRUE)
 ```
 
 ## 2. Usage
