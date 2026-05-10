@@ -25,5 +25,6 @@ Imports:
     fs,
     stringr,
     purrr,
-    tibble
+    tibble,
+    ape
 Config/roxygen2/version: 8.0.0

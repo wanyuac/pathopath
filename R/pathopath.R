@@ -28,7 +28,7 @@
 #
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 12 November 2025; the latest update: 7 January 2026
+#  Creation: 12 November 2025; the latest update: 10 May 2026
 
 pathopath <- function(movements = NULL, samples = NULL, dt = 3) {
     # Parse the input spreadsheet into a named list of pathways and count the number of migrations per pathway
@@ -55,22 +55,6 @@ pathopath <- function(movements = NULL, samples = NULL, dt = 3) {
                                  samples = samples,
                                  dt = dt)))
 }
-
-# Functional modules ##########
-setClass(Class = "Network",
-         slots = list(V = "data.frame",
-                      E = "data.frame"))
-
-setClass(
-    # The output class of function pathpath
-    Class = "Pathopath",
-    slots = list(
-        pathways = "list",
-        migrations = "data.frame",
-        contacts = "data.frame",
-        summary = "data.frame",
-        network = "Network",
-        parameters = "list"))
 
 .summarise_contacts <- function(contacts) {
     # This function summarises contacts at the pathway level for each combination of Subject_1, Subject_2, Pathway_1,

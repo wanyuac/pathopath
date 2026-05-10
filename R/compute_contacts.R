@@ -61,15 +61,6 @@ compute_contacts <- function(pathways, dt = 3) {
     return(contacts_s1_s2)  # This return variable is NULL if no contact is found.
 }
 
-setClass(
-    Class = "Periods",
-    slots = list(
-        start = "Date",
-        end = "Date",
-        length = "integer"
-    )
-)
-
 .find_contacts <- function(subject_1, subject_2, pathway_s1, pathway_s2, dt) {
     # Find and quantify contacts across shared locations between two specific pathways
     contacts <- NULL  # Initiate the output tibble for pathways s1 and s2
