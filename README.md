@@ -2,9 +2,13 @@
 
 <img src="figures/pathopath_logo.png" style="width: 50%; height: auto;" alt="Pathopath logo" />
 
-**Patho**gen **Path**ways (PathoPath) is an R package determining direct and indirect contacts between movement pathways of subjects and building a contact network accordingly. It was developed for tracing transmission of pathogens. Subjects include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility—for instance, a single hospital or hospital network—from admission to discharge.
+**Patho**gen **Path**ways (PathoPath) is an open-source R package determining direct and indirect contacts between movement pathways of subjects and building a contact network accordingly, enabling integration of diverse pathogen data for epidemiological investigation and surveillance, such as tracing regional transmission of pathogens.
+
+For reconstruction of contact networks across settings, Pathopath has extended the conventional focus on patients to a generalised concept of *subjects*, which include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility—for instance, a single hospital or hospital network—from admission to discharge.
 
 Strengths of pathopath includes (1) versability—support multiple location levels (Hospital, Building, Floor, Unit, Ward, Room, Bed, *etc*) that can be specified by users; (2) generality—incorporation of patients and inanimate subjects.
+
+Pathopath is released under the GNU General Public License v3.0.
 
 ## 1. Installation
 
@@ -159,11 +163,11 @@ No, although it is a good practice to make pathway identifiers unique across the
 
 ### 5.1. Citation
 
-Wan Y, Sajib MSI. Pathopath. https://github.com/wanyuac/pathopath (2025).
+Wan Y, Sajib MSI. Pathopath. https://github.com/wanyuac/pathopath (2026).
 
 ### 5.2. Funding sources
 
-* NIHR Global Health Research Development Award to the Child Health Research Foundation in Bangladesh.
-* David Price Evans Research Fellowship to Yu Wan.
-* Centres for Antimicrobial Optimisation Network (CAMO-Net) Research Fellowship to Mohammad Saiful Islam Sajib.
+* NIHR Global Health Research Development Award (Grant number: NIHR208273) and Gates Foundation grant (Grant number: INV073135) to the Child Health Research Foundation in Bangladesh.
+* David Price Evans Research Fellowship to Yu Wan (Grant number: UGG10057).
+* Centres for Antimicrobial Optimisation Network (CAMO-Net) Research Fellowship to Mohammad Saiful Islam Sajib (Grant number: 226691/Z/22/Z; Wellcome Trust).
 
