@@ -1,20 +1,21 @@
 #' @title Complete-linkage hierachical clustering of subjects by Hamming distances
 #'
 #' @description This function takes as input a matrix of Hamming distances, which can be a SNP-distance matrix generated
-#' from a sequence alignment by software snp-dists, and a vector of distance thresholds (positive integers). It clusters
-#' subjects using complete-linkage hierarchical clustering and then partitions subjects into clusters under each distance
-#' threshold. Users do not need to include zero in the threshold vector, since this function always determines clusters
-#' of genetically identical subjects, generating column "Cluster_0" in the output tibble of cluster identifiers.
+#' from a sequence alignment by software snp-dists, and a vector of distance thresholds. It clusters subjects using
+#' complete-linkage hierarchical clustering and then partitions subjects into clusters under each distance threshold.
+#' Users do not need to include zero in the threshold vector, since this function always determines clusters of genetically
+#' identical subjects, generating column "Cluster_0" in the output tibble of cluster identifiers.
 #'
 #' @param mat Path to the input distance matrix in the TSV format.
-#' @param threshold Threshold of SNP distances. Integer. Default: c(5, 10, 15, 20, 50).
+#' @param threshold Positive integers for distance thresholds. Default: c(5, 10, 15, 20, 50).
 #' @param excl_subjects An optional vector of subject names for exclusion from the clustering analysis.
 #'
 #' @return A Clusters object comprising the following slots: (1) data frame "clusters" consisting of columns "Subject",
 #' "Cluster_0", ..., "Cluster_n", where n represents the largest distance threshold in the vector "thresholds"; (2) data
 #' frame "cluster_counts" of two columns "Threshold", "Cluster_count"; (3) named list "tree", which consists of a dendrogram
 #' "tree" (rooted by the clustering algorithm) and a character field "method" (complete linkage); and (4) symmetric matrix
-#' "distances", storing the input distance matrix.
+#' "distances", storing the input distance matrix; if the excl_subjects parameter is specified, certain subjects are
+#' excluded from this matrix.
 #'
 #' @importFrom fs file_exists
 #' @importFrom ape as.phylo
@@ -25,7 +26,7 @@
 #
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 9 May 2026; the latest update: 10 May 2026
+#  Creation: 9 May 2026; the latest update: 11 May 2026
 
 hd_clustering <- function(mat = NULL, thresholds = c(5L, 10L, 15L, 20L, 50L), excl_subjects = "") {
     # require(readr); require(fs); require(dplyr); require(tibble); require(ape)
