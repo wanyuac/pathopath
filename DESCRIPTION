@@ -1,7 +1,7 @@
 Package: pathopath
 Type: Package
 Title: Network-based epidemiological analysis
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(
     person(
       "Yu", "Wan",
