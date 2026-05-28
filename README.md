@@ -1,4 +1,4 @@
-# PathoPath
+# PathoPath: integrative modelling of pathogen transmission pathways
 
 <img src="figures/pathopath_logo.png" style="width: 75%; height: auto;" alt="PathoPath logo" />
 
