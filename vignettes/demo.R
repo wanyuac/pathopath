@@ -1,7 +1,7 @@
 # Demonstration of pathopath's utility
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 16 November 2025; the latest update: 14 January 2026
+#  Creation: 16 November 2025; the latest update: 25 May 2026
 
 library(dplyr)
 library(readr)
@@ -42,3 +42,21 @@ View(pp_updated@network@V)
 
 # Section 3: demonstrate error messages from the quality assessment of input movement data ###############
 incorrect_pathways <- read_pathways(movement_table = "vignettes/input_movements_with_mistakes.tsv")
+
+# Section 4: clustering of subjects based on Hamming distances ###############
+
+# Method 1: complete-linkage hierarchical clustering ===============
+library(ape)
+
+hc <- h_clustering(mat = "vignettes/input_distance_matrix.tsv", thresholds = 2)
+View(hc@clusters)  # Show membership of subjects under distance thresholds 0 and 2
+View(hc@cluster_counts)  # Show the number of clusters under distance thresholds 0 and 2
+plot(hc@tree[["tree"]])  # Draw the dendrogram
+write_tsv(hc@clusters, file = "vignettes/output_h_clustering.tsv")
+write.tree(hc@tree[["tree"]], file = "vignettes/output_h_clustering_dend.newick")
+
+# Method 2: component discovery in a distance network ===============
+comp <- dn_clustering(mat = "vignettes/input_distance_matrix.tsv", thresholds = 2)
+View(comp@clusters)  # Membership of subjects
+View(comp@cluster_counts)  # Number of components under distance thresholds 0 and 2
+write_tsv(comp@clusters, file = "vignettes/output_dn_clustering.tsv")

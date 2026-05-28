@@ -1,7 +1,7 @@
 Package: pathopath
 Type: Package
 Title: Network-based epidemiological analysis
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: c(
     person(
       "Yu", "Wan",
@@ -26,5 +26,7 @@ Imports:
     stringr,
     purrr,
     tibble,
-    ape
+    ape,
+    igraph
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.2
