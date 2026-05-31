@@ -45,7 +45,7 @@
 
 ### 1.2. Major innovations<a id="major-innovations"></a>
 
-1. Generalised scope: PathoPath has extended beyond our conventional focus on patients to a generalised concept of *subjects*, which include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility, such as a hospital or network of hospitals, from admission to discharge.
+1. A generalised scope: PathoPath has extended beyond our conventional focus on patients to a generalised concept of *subjects*, which include patients, animals, inanimate objects, and so forth. In hospital settings, each pathway consists of all movements of a patient within a relevant healthcare facility, such as a hospital or network of hospitals, from admission to discharge.
 2. Threshold-based inference of indirect contacts: PathoPath uses a user-defined parameter Δt to infer indirect contacts. This parameter represents the user's belief about the length of time in which a contaminated subject (e.g, a bed) remains contagious.
 
 ### 1.3. Limitations<a id="limitations"></a>
@@ -60,7 +60,7 @@
 
 ### 2.1. Prerequisites<a id="prerequisites"></a>
 
-* Latest [R](https://cran.r-project.org/) code interpreter
+* An [R](https://cran.r-project.org/) code interpreter—the latest version is recommended.
 * R packages dplyr, readr, fs, stringr, purrr, tibble, igraph, and ape
 * Data: complete records (electronic or paper-based) of subject movements
 
@@ -186,9 +186,15 @@ In the simplest scenario, where each subject has a single pathway (as demonstrat
 
 ### 3.7. Component identification—clustering of nodes in the contact network by contact lengths<a id="component-identification"></a>
 
-As demonstrated in our manuscript, function `contact_clustering` identifies maximal connected components in the contact network based on contact lengths, optionally after pruning edges whose lengths exceed a user-specified maximum, `l_max`. Internally, the function constructs an undirected igraph object from the node table `V` and edge table `E`, which can be supplied directly from `pp@network@V` and `pp@network@E`, respectively. Edge pruning is applied when `l_max` is a finite positive value, retaining only edges with `Contact_len <= l_max`; nodes that become isolated following pruning are excluded from the analysis. Connected components are then identified using `igraph::components()`, and the function returns a `Components` object comprising four slots: `V` and `E` for the nodes and edges of the possibly pruned network, `membership` for per-node component assignments (combined with all node-level metadata from `V`), and `component_size` for the number of nodes in each component.
+As demonstrated in our manuscript, function `contact_clustering` identifies maximal connected components in the contact network based on contact lengths, optionally after pruning edges whose lengths exceed a user-specified maximum, `l_max` (Figure 6). Internally, the function constructs an undirected igraph object from the node table `V` and edge table `E`, which can be supplied directly from `pp@network@V` and `pp@network@E`, respectively. Edge pruning is applied when `l_max` is a finite positive value, retaining only edges with `Contact_len <= l_max`; nodes that become isolated following pruning are excluded from the analysis. Connected components are then identified using `igraph::components()`, and the function returns a `Components` object comprising four slots: `V` and `E` for the nodes and edges of the possibly pruned network, `membership` for per-node component assignments (combined with all node-level metadata from `V`), and `component_size` for the number of nodes in each component.
 
 By varying `l_max`, users can examine how the component structure of the contact network changes as a function of contact lengths, providing a straightforward means of identifying closely connected clusters of pathways at different levels of contact stringency. For instance, setting a small `l_max` retains only edges representing brief contacts, typically yielding a larger number of smaller, more tightly connected components, whereas setting `l_max = Inf` (the default) preserves all edges and reveals the broadest connectivity structure of the network. This approach is conceptually analogous to the component discovery method implemented in `dn_clustering` (Section 3.8.2), but operates on contact lengths rather than pathogen-characteristic distances, and therefore complements the pathogen-based clustering with an epidemiological perspective on transmission networks.
+
+Note that users may want to filter the edge and node tables for direct or indirect contacts before this clustering analysis if either type of contacts is investigated.
+
+<img src="figures/contact_clustering.png" style="width: 60%; height: auto;" alt="Infographic of contact clustering" />
+
+**Figure 6.** The algorithm of contact clustering.
 
 ### 3.8. Clustering of nodes in the contact network by pathogen characteristics<a id="node-clustering"></a>
 
@@ -196,26 +202,26 @@ In addition to the clustering of nodes by contact lengths, PathoPath has impleme
 
 #### 3.8.1. Complete-linkage hierarchical clustering
 
-Function `h_clustering` uses [complete-linkage hierarchical clustering](https://en.wikipedia.org/wiki/Complete-linkage_clustering) to classify nodes into clusters (Figure 6), ensuring any pairwise Hamming distance between nodes within the same cluster does not exceed a given threshold. This is a commonly used approach to isolate clustering in epidemiological investigation. For example, a study proposed a conservative cut-off of 15 core-genome SNPs to infer possible transmission of methicillin-resistant *Staphylococcus aureus* (MRSA) within six months ([Coll, Raven, Knight, et al., 2020, *Lancet Microbe*](https://doi.org/10.1016/S2666-5247(20)30149-X)). Function `h_clustering` also produces a dendrogram in the Newick format for visualisation (Figure 6B).
+Function `h_clustering` uses [complete-linkage hierarchical clustering](https://en.wikipedia.org/wiki/Complete-linkage_clustering) to classify nodes into clusters (Figure 7), ensuring any pairwise Hamming distance between nodes within the same cluster does not exceed a given threshold. This is a commonly used approach to isolate clustering in epidemiological investigation. For example, a study proposed a conservative cut-off of 15 core-genome SNPs to infer possible transmission of methicillin-resistant *Staphylococcus aureus* (MRSA) within six months ([Coll, Raven, Knight, et al., 2020, *Lancet Microbe*](https://doi.org/10.1016/S2666-5247(20)30149-X)). Function `h_clustering` also produces a dendrogram in the Newick format for visualisation (Figure 6B).
 
-<img src="figures/h_clustering_algorithm.png" style="width: 75%; height: auto;" alt="PathoPath logo" />
+<img src="figures/h_clustering_algorithm.png" style="width: 75%; height: auto;" alt="Infographic of complete-linkage hierarchical clustering" />
 
-**Figure 6**. Input (A), algorithm (B), and outcome (C) of the complete-linkage hierarchical clustering of nodes in the contact network.
+**Figure 7**. Input (A), algorithm (B), and outcome (C) of the complete-linkage hierarchical clustering of nodes in the contact network.
 
 #### 3.8.2. Component discovery following network pruning
 
 Function `dn_clustering` identifies maximal connected components in a distance network that has been pruned to remove edges having distances exceeding a given threshold. This method is more tolerant to stepwise accumulation of divergence in pathogens along transmission chains than the method of complete-linkage hierarchical clustering despite the caveat of transitivity that may result in pairwise Hamming distances greater than the threshold within the same cluster. The prefix "dn" in the function name stands for "distance network".
 
-The algorithm of is method follows (Figure 7).
+The algorithm of is method follows (Figure 8).
 
 1. Import a symmetric distance matrix, which is equivalent to an all-to-all network.
 2. Mask entries exceeding a given distance cut-off in the matrix, equivalent to edge pruning.
 3. Construct a network from remaining distances.
 4. Identify maximal connected components in the network.
 
-<img src="figures/dn_clustering_algorithm.png" style="width: 60%; height: auto;" alt="PathoPath logo" />
+<img src="figures/dn_clustering_algorithm.png" style="width: 60%; height: auto;" alt="Infographic of component-discovery clustering" />
 
-**Figure 7**. Input distance matrix (A) and the output of function `dn_clustering` (B). In implementation, entries of distances greater than a given threshold (here, 2) are masked as FALSE to be excluded from the network construction.
+**Figure 8**. Input distance matrix (A) and the output of function `dn_clustering` (B). In implementation, entries of distances greater than a given threshold (here, 2) are masked as FALSE to be excluded from the network construction.
 
 ### 3.9. Detach the package after use<a id="detach"></a>
 
