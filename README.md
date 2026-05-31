@@ -280,6 +280,6 @@ No, although it is a good practice to make pathway identifiers unique across the
 ## 6. Funding information<a id="funding"></a>
 
 * NIHR Global Health Research Development Award (Grant number: NIHR208273) and Gates Foundation grant (Grant number: INV073135) to the Child Health Research Foundation in Bangladesh.
-* David Price Evans Research Fellowship to Yu Wan (Grant number: UGG10057).
+* David Price Evans Research Fellowship to Yu Wan (Grant number: UGG10057; University of Liverpool).
 * Centres for Antimicrobial Optimisation Network (CAMO-Net) Research Fellowship to Mohammad Saiful Islam Sajib (Grant number: 226691/Z/22/Z; Wellcome Trust).
 
