@@ -2,7 +2,7 @@
 
 <img src="figures/pathopath_logo.png" style="width: 75%; height: auto;" alt="PathoPath logo" />
 
-**Patho**gen **Path**ways (PathoPath) is an open-source R package for integrative modelling of pathogen transmission via direct or indirect contacts between movement pathways of subjects, facilitating epidemiological investigation and surveillance, including monitoring regional transmission of certain pathogens. Contributions to the code are welcome.
+**Patho**gen **Path**ways (PathoPath or Pathopath) is an open-source R package for integrative modelling of pathogen transmission via direct or indirect contacts between movement pathways of subjects, facilitating epidemiological investigation and surveillance, including monitoring regional transmission of certain pathogens. Contributions to the code are welcome.
 
 
 
@@ -22,6 +22,7 @@
    * [Use the pathopath function](#pathopath-function)
    * [Access the output](#outputs)
    * [Interpret the network](#interpret-network)
+   * [Component identification](#component-identification)
    * [Node clustering with pathogen characteristics](#node-clustering)
    * [Detach the package after use](#detach)
    
@@ -40,7 +41,7 @@
 
 1. Construction of a network from direct and/or indirect contacts,
 2. Incorporation of configurable pathogen characteristics (for instance, genotypes and genetic clusters) as node attributes in the contact network.
-3. Platform for customised investigations and local adaptation for users' own data dashboards—teamwork is essential for a successful implementation of PathoPath in a specific setting.
+3. An open platform for customised investigations and local adaptation for users' own data dashboards—teamwork and local capacity-building are essential for a successful implementation of PathoPath in a specific setting. Please contact us (either by email or requests on [Issues](https://github.com/wanyuac/pathopath/issues)) if you need any assistance.
 
 ### 1.2. Major innovations<a id="major-innovations"></a>
 
@@ -49,8 +50,9 @@
 
 ### 1.3. Limitations<a id="limitations"></a>
 
-1. PathoPath does not provide any graphical user interface (GUI), which may be created with the [Shiny](https://shiny.posit.co/) package, since we encourage users to develop their own GUI to suit their needs.
+1. PathoPath does not provide any graphical user interface (GUI), which may be created with the [Shiny](https://shiny.posit.co/) package, since we encourage users to develop their own GUIs that cooperate with local information-management systems for specific needs.
 2. It does not infer directions of transmission.
+3. As a research tool, PathoPath may misbehave in your analysis, so please use it with caution. A local validation of this tool in your setting is desirable. We will sincerely appreciate your critiques or report of any issue in the [Issues](https://github.com/wanyuac/pathopath/issues) section and will work together to solve these problems. Suggestions for new functions are also welcome.
 
 
 
@@ -182,11 +184,17 @@ In this network:
 
 In the simplest scenario, where each subject has a single pathway (as demonstrated in our manuscript),  the nodes are equivalent to subjects, and thereby the network depicts contacts between these subjects.
 
-### 3.7. Clustering of nodes in the contact network by pathogen characteristics<a id="node-clustering"></a>
+### 3.7. Component identification—clustering of nodes in the contact network by contact lengths<a id="component-identification"></a>
 
-PathoPath has implemented two clustering methods based on [Hamming distances](https://www.datacamp.com/tutorial/hamming-distance) between pathway-associated pathogen characteristics. Such distances include the widely used core-genome single-nucleotide polymorphism (SNP) distances between bacterial isolates. By definition, the matrix of Hamming distances is symmetric. Both clustering methods require as parameter (`thresholds`) a vector of integer distance thresholds (default: 5, 10, 15, 20, 50) and report clusters determined under each threshold. In addition to user-specified thresholds, both methods determine clusters of identical characteristic profiles (namely, `threshold = 0`, by which genetically identical isolates are clustered), reporting the same result and reflecting the convergence of methods.
+As demonstrated in our manuscript, function `contact_clustering` identifies maximal connected components in the contact network based on contact lengths, optionally after pruning edges whose lengths exceed a user-specified maximum, `l_max`. Internally, the function constructs an undirected igraph object from the node table `V` and edge table `E`, which can be supplied directly from `pp@network@V` and `pp@network@E`, respectively. Edge pruning is applied when `l_max` is a finite positive value, retaining only edges with `Contact_len <= l_max`; nodes that become isolated following pruning are excluded from the analysis. Connected components are then identified using `igraph::components()`, and the function returns a `Components` object comprising four slots: `V` and `E` for the nodes and edges of the possibly pruned network, `membership` for per-node component assignments (combined with all node-level metadata from `V`), and `component_size` for the number of nodes in each component.
 
-#### 3.7.1. Complete-linkage hierarchical clustering
+By varying `l_max`, users can examine how the component structure of the contact network changes as a function of contact lengths, providing a straightforward means of identifying closely connected clusters of pathways at different levels of contact stringency. For instance, setting a small `l_max` retains only edges representing brief contacts, typically yielding a larger number of smaller, more tightly connected components, whereas setting `l_max = Inf` (the default) preserves all edges and reveals the broadest connectivity structure of the network. This approach is conceptually analogous to the component discovery method implemented in `dn_clustering` (Section 3.8.2), but operates on contact lengths rather than pathogen-characteristic distances, and therefore complements the pathogen-based clustering with an epidemiological perspective on transmission networks.
+
+### 3.8. Clustering of nodes in the contact network by pathogen characteristics<a id="node-clustering"></a>
+
+In addition to the clustering of nodes by contact lengths, PathoPath has implemented two clustering methods based on [Hamming distances](https://www.datacamp.com/tutorial/hamming-distance) between pathway-associated pathogen characteristics. Such distances include the widely used core-genome single-nucleotide polymorphism (SNP) distances between bacterial isolates. By definition, the matrix of Hamming distances is symmetric. Both clustering methods require as parameter (`thresholds`) a vector of integer distance thresholds (default: 5, 10, 15, 20, 50) and report clusters determined under each threshold. In addition to user-specified thresholds, both methods determine clusters of identical characteristic profiles (namely, `threshold = 0`, by which genetically identical isolates are clustered), reporting the same result and reflecting the convergence of methods.
+
+#### 3.8.1. Complete-linkage hierarchical clustering
 
 Function `h_clustering` uses [complete-linkage hierarchical clustering](https://en.wikipedia.org/wiki/Complete-linkage_clustering) to classify nodes into clusters (Figure 6), ensuring any pairwise Hamming distance between nodes within the same cluster does not exceed a given threshold. This is a commonly used approach to isolate clustering in epidemiological investigation. For example, a study proposed a conservative cut-off of 15 core-genome SNPs to infer possible transmission of methicillin-resistant *Staphylococcus aureus* (MRSA) within six months ([Coll, Raven, Knight, et al., 2020, *Lancet Microbe*](https://doi.org/10.1016/S2666-5247(20)30149-X)). Function `h_clustering` also produces a dendrogram in the Newick format for visualisation (Figure 6B).
 
@@ -194,7 +202,7 @@ Function `h_clustering` uses [complete-linkage hierarchical clustering](https://
 
 **Figure 6**. Input (A), algorithm (B), and outcome (C) of the complete-linkage hierarchical clustering of nodes in the contact network.
 
-#### 3.7.2. Component discovery following network pruning
+#### 3.8.2. Component discovery following network pruning
 
 Function `dn_clustering` identifies maximal connected components in a distance network that has been pruned to remove edges having distances exceeding a given threshold. This method is more tolerant to stepwise accumulation of divergence in pathogens along transmission chains than the method of complete-linkage hierarchical clustering despite the caveat of transitivity that may result in pairwise Hamming distances greater than the threshold within the same cluster. The prefix "dn" in the function name stands for "distance network".
 
@@ -209,7 +217,7 @@ The algorithm of is method follows (Figure 7).
 
 **Figure 7**. Input distance matrix (A) and the output of function `dn_clustering` (B). In implementation, entries of distances greater than a given threshold (here, 2) are masked as FALSE to be excluded from the network construction.
 
-### 3.8. Detach the package after use<a id="detach"></a>
+### 3.9. Detach the package after use<a id="detach"></a>
 
 ```R
 detach(name = "package:pathopath", unload = TRUE)  # The package can be reloaded using the library() function.

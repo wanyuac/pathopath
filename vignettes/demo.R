@@ -1,7 +1,7 @@
 # Demonstration of pathopath's utility
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 16 November 2025; the latest update: 25 May 2026
+#  Creation: 16 November 2025; the latest update: 31 May 2026
 
 library(dplyr)
 library(readr)
@@ -43,7 +43,20 @@ View(pp_updated@network@V)
 # Section 3: demonstrate error messages from the quality assessment of input movement data ###############
 incorrect_pathways <- read_pathways(movement_table = "vignettes/input_movements_with_mistakes.tsv")
 
-# Section 4: clustering of subjects based on Hamming distances ###############
+# Section 4: clustering of nodes based on contact lengths ###############
+# Scenario 1: no edge pruning
+contact_clusters <- contact_clustering(E = pp@network@E, V = pp@network@V)
+g <- igraph::graph_from_data_frame(d = contact_clusters@E, directed = FALSE, vertices = contact_clusters@V)
+View(contact_clusters@membership)
+plot(g)
+
+# Scenario 2: pruning edges for a maximum of contact length of 10 days
+contact_clusters_10 <- contact_clustering(E = pp@network@E, V = pp@network@V, l_max = 10)
+g_10 <- igraph::graph_from_data_frame(d = contact_clusters_10@E, directed = FALSE, vertices = contact_clusters_10@V)
+View(contact_clusters_10@membership)
+plot(g_10)
+
+# Section 5: clustering of nodes based on Hamming distances ###############
 
 # Method 1: complete-linkage hierarchical clustering ===============
 library(ape)

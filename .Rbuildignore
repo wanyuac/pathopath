@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^\.positai$
 ^\.claude$
+^figures$
+^README\.md$
