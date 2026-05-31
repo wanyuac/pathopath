@@ -192,9 +192,9 @@ By varying `l_max`, users can examine how the component structure of the contact
 
 Note that users may want to filter the edge and node tables for direct or indirect contacts before this clustering analysis if either type of contacts is investigated.
 
-<img src="figures/contact_clustering.png" style="width: 60%; height: auto;" alt="Infographic of contact clustering" />
+<img src="figures/contact_clustering.png" style="width: 75%; height: auto;" alt="Infographic of contact clustering" />
 
-**Figure 6.** The algorithm of contact clustering.
+**Figure 6.** The algorithm of contact clustering. Function `contact_clustering` does not filter the input network when `l_max = 0` because there is no practical point to break a network into singletons, which are equivalent to a node table.
 
 ### 3.8. Clustering of nodes in the contact network by pathogen characteristics<a id="node-clustering"></a>
 
