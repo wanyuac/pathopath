@@ -204,6 +204,22 @@ In practice, users may want to filter the edge and node tables for direct or ind
 
 **Figure 6.** The algorithm of contact clustering. Function `contact_clustering` does not filter the input network when `l_max = 0` because there is no practical point to break a network into singletons, which are equivalent to a node table.
 
+Example commands:
+
+```r
+# Scenario 1: no edge pruning
+contact_clusters <- contact_clustering(E = pp@network@E, V = pp@network@V)  # No edge pruning
+View(contact_clusters@membership)
+g <- igraph::graph_from_data_frame(d = contact_clusters@E, directed = FALSE, vertices = contact_clusters@V)
+plot(g)  # Draw the input network
+
+# Scenario 2: pruning edges for a maximum of contact length of 10 days
+contact_clusters_10 <- contact_clustering(E = pp@network@E, V = pp@network@V, l_max = 10)
+View(contact_clusters_10@membership)
+g_10 <- igraph::graph_from_data_frame(d = contact_clusters_10@E, directed = FALSE, vertices = contact_clusters_10@V)
+plot(g_10)  # Draw the pruned network
+```
+
 ### 3.8. Clustering of nodes in the contact network by pathogen characteristics<a id="node-clustering"></a>
 
 In addition to the clustering of nodes by contact lengths, PathoPath has implemented two clustering methods based on [Hamming distances](https://www.datacamp.com/tutorial/hamming-distance) between pathway-associated pathogen characteristics. Such distances include the widely used core-genome single-nucleotide polymorphism (SNP) distances between bacterial isolates. By definition, the matrix of Hamming distances is symmetric. Both clustering methods require as parameter (`thresholds`) a vector of integer distance thresholds (default: 5, 10, 15, 20, 50) and report clusters determined under each threshold. In addition to user-specified thresholds, both methods determine clusters of identical characteristic profiles (namely, `threshold = 0`, by which genetically identical isolates are clustered), reporting the same result and reflecting the convergence of methods.
@@ -215,6 +231,15 @@ Function `h_clustering` uses [complete-linkage hierarchical clustering](https://
 <img src="figures/h_clustering_algorithm.png" style="width: 75%; height: auto;" alt="Infographic of complete-linkage hierarchical clustering" />
 
 **Figure 7**. Input (A), algorithm (B), and outcome (C) of the complete-linkage hierarchical clustering of nodes in the contact network.
+
+Example commands:
+
+```r
+hc <- h_clustering(mat = "vignettes/input_distance_matrix.tsv", thresholds = 2)
+View(hc@clusters)  # Show membership of subjects under distance thresholds 0 and 2
+View(hc@cluster_counts)  # Show the number of clusters under distance thresholds 0 and 2
+plot(hc@tree[["tree"]])  # Draw the dendrogram
+```
 
 #### 3.8.2. Component discovery following network pruning<a id="dn_clustering"></a>
 
@@ -230,6 +255,14 @@ The algorithm of is method follows (Figure 8).
 <img src="figures/dn_clustering_algorithm.png" style="width: 60%; height: auto;" alt="Infographic of component-discovery clustering" />
 
 **Figure 8**. Input distance matrix (A) and the output of function `dn_clustering` (B). In implementation, entries of distances greater than a given threshold (here, 2) are masked as FALSE to be excluded from the network construction.
+
+Example commands:
+
+```r
+comp <- dn_clustering(mat = "vignettes/input_distance_matrix.tsv", thresholds = 2)
+View(comp@clusters)  # Membership of subjects
+View(comp@cluster_counts)  # Number of components under distance thresholds 0 and 2
+```
 
 ### 3.9. Detach the package after use<a id="detach"></a>
 
