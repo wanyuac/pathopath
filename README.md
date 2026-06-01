@@ -186,11 +186,19 @@ In the simplest scenario, where each subject has a single pathway (as demonstrat
 
 ### 3.7. Component identification—clustering of nodes in the contact network by contact lengths<a id="component-identification"></a>
 
-As demonstrated in our manuscript, function `contact_clustering` identifies maximal connected components in the contact network based on contact lengths, optionally after pruning edges whose lengths exceed a user-specified maximum, `l_max` (Figure 6). Internally, the function constructs an undirected igraph object from the node table `V` and edge table `E`, which can be supplied directly from `pp@network@V` and `pp@network@E`, respectively. Edge pruning is applied when `l_max` is a finite positive value, retaining only edges with `Contact_len <= l_max`; nodes that become isolated following pruning are excluded from the analysis. Connected components are then identified using `igraph::components()`, and the function returns a `Components` object comprising four slots: `V` and `E` for the nodes and edges of the possibly pruned network, `membership` for per-node component assignments (combined with all node-level metadata from `V`), and `component_size` for the number of nodes in each component.
+As demonstrated in our manuscript, function `contact_clustering` identifies maximal connected components in the contact network based on contact lengths, optionally after pruning edges whose lengths exceed a user-specified maximum, `l_max` (Figure 6).
 
-By varying `l_max`, users can examine how the component structure of the contact network changes as a function of contact lengths, providing a straightforward means of identifying closely connected clusters of pathways at different levels of contact stringency. For instance, setting a small `l_max` retains only edges representing brief contacts, typically yielding a larger number of smaller, more tightly connected components, whereas setting `l_max = Inf` (the default) preserves all edges and reveals the broadest connectivity structure of the network. This approach is conceptually analogous to the component discovery method implemented in `dn_clustering` (Section 3.8.2), but operates on contact lengths rather than pathogen-characteristic distances, and therefore complements the pathogen-based clustering with an epidemiological perspective on transmission networks.
+Internally, this function constructs an undirected igraph object from a node table `V` and an edge table `E`, which can be supplied directly from `pp@network@V` and `pp@network@E`, respectively, where `pp` is an output of the main function `pathopath`. Edge pruning is applied when `l_max` is a finite positive value, retaining only edges with `Contact_len <= l_max`; nodes that become isolated following pruning are included in the network as singletons. Connected components are then identified in the network using the `igraph::components()` function. Finally, the `contact_clustering` function returns a `Components` object comprising four slots:
 
-Note that users may want to filter the edge and node tables for direct or indirect contacts before this clustering analysis if either type of contacts is investigated.
+* `V` and `E` for the nodes and edges of the possibly pruned network,
+* `membership` for per-node component assignments (combined with all node-level metadata from `V`),
+* `component_size` for the number of nodes in each component.
+
+By varying the cut-off of contact lengths, `l_max`, users can examine how components change for epidemiological insights. Setting a small `l_max` retains only edges representing short contacts, typically yielding a larger number of smaller, more tightly connected components, whereas setting `l_max = Inf` (the default) preserves all edges and reveals the broadest connectivity structure of the contact network.
+
+This clustering approach is conceptually analogous to the pathogen-based component-discovery method implemented in function `dn_clustering` (Section [3.8.2](#dn_clustering)), but operates on contact lengths rather than pairwise Hamming distances between pathogen characteristics. Therefore, it complements the pathogen-based clustering with an epidemiological perspective.
+
+In practice, users may want to filter the edge and node tables for direct or indirect contacts before this clustering analysis if either type of contacts is investigated.
 
 <img src="figures/contact_clustering.png" style="width: 75%; height: auto;" alt="Infographic of contact clustering" />
 
@@ -208,7 +216,7 @@ Function `h_clustering` uses [complete-linkage hierarchical clustering](https://
 
 **Figure 7**. Input (A), algorithm (B), and outcome (C) of the complete-linkage hierarchical clustering of nodes in the contact network.
 
-#### 3.8.2. Component discovery following network pruning
+#### 3.8.2. Component discovery following network pruning<a id="dn_clustering"></a>
 
 Function `dn_clustering` identifies maximal connected components in a distance network that has been pruned to remove edges having distances exceeding a given threshold. This method is more tolerant to stepwise accumulation of divergence in pathogens along transmission chains than the method of complete-linkage hierarchical clustering despite the caveat of transitivity that may result in pairwise Hamming distances greater than the threshold within the same cluster. The prefix "dn" in the function name stands for "distance network".
 
