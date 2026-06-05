@@ -12,6 +12,7 @@
    * [What PathoPath enables](#functionality)
    * [Major innovations](#major-innovations)
    * [Limitations](#limitations)
+   * [Citation](#citation)
 2. [Deployment](#deployment)
    * [Prerequisites](#prerequisites)
    * [Installation](#installation)
@@ -53,6 +54,10 @@
 1. PathoPath does not provide any graphical user interface (GUI), which may be created with the [Shiny](https://shiny.posit.co/) package, since we encourage users to develop their own GUIs that cooperate with local information-management systems for specific needs.
 2. It does not infer directions of transmission.
 3. As a research tool, PathoPath may misbehave in your analysis, so please use it with caution. A local validation of this tool in your setting is desirable. We will sincerely appreciate your critiques or report of any issue in the [Issues](https://github.com/wanyuac/pathopath/issues) section and will work together to solve these problems. Suggestions for new functions are also welcome.
+
+### 1.4. Citation<a id="citation"></a>
+
+Sajib MS, Tanmoy AM, Kanon N, et al. Integrating patient movement and pathogen genomics to support hospital infection prevention with PathoPath: a method development study. medRxiv 2026; : 2026.06.03.26354630. https://doi.org/10.64898/2026.06.03.26354630.
 
 
 
