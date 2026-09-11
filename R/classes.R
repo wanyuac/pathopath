@@ -7,7 +7,7 @@
 #
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 10 May 2026; the latest update: 31 May 2026
+#  Creation: 10 May 2026; the latest update: 11 September 2026
 
 # For pathopath.R ###############
 setClass(
@@ -50,12 +50,13 @@ setClass(
         )
     )
 
-# For hd_clustering.R ###############
+# For sample_clustering.R ###############
 setClass(
     Class = "Clusters",
     slots = list(
         clusters = "data.frame",
         cluster_counts = "data.frame",
+        method = "character",
         tree = "list",
         distances = "matrix"
         )
