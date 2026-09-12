@@ -37,6 +37,7 @@ compute_contacts <- function(pathways, dt = 3) {
     return(contacts)
 }
 
+
 .pairwise_contacts <- function(subject_pair, pathways, dt) {
     # Find and quantify contacts between all pairs of pathways of two specific subjects s1 and s2
     s1 <- subject_pair[[1]]  # Subject 1
@@ -60,6 +61,7 @@ compute_contacts <- function(pathways, dt = 3) {
     }
     return(contacts_s1_s2)  # This return variable is NULL if no contact is found.
 }
+
 
 .find_contacts <- function(subject_1, subject_2, pathway_s1, pathway_s2, dt) {
     # Find and quantify contacts across shared locations between two specific pathways
@@ -112,6 +114,7 @@ compute_contacts <- function(pathways, dt = 3) {
     }
     return(contacts)  # Result "contacts" is either NULL or an non-empty tibble.
 }
+
 
 .identify_contact <- function(period_1, period_2, dt) {
     # This is a subordinate function of function .find_contacts().

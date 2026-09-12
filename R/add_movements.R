@@ -77,6 +77,7 @@ add_movements <- function(movements = NULL, samples = NULL, previous_results = N
                                  dt = previous_results@parameters[["dt"]])))
 }
 
+
 .pairwise_contacts_across_datasets <- function(sa, sp, pathways_add, pathways_prev, dt = 3) {
     # This function supports "add_movements" and is adapted from function ".pairwise_contacts".
     pt_a <- pathways_add[[sa]]  # Pathway tibble of subject sa, which may have >1 pathways.
@@ -99,6 +100,7 @@ add_movements <- function(movements = NULL, samples = NULL, previous_results = N
     return(contacts)  # NULL is returned if no contact is identified.
 }
 
+
 .combine_pathways <- function(pathways_add, pathways_prev) {
     subjects_prev <- names(pathways_prev)
     for (sa in names(pathways_add)) {
@@ -111,6 +113,7 @@ add_movements <- function(movements = NULL, samples = NULL, previous_results = N
     }
     return(pathways_prev)  # Return the updated pathway records
 }
+
 
 .update_migration_summary <- function(migrations_add, migrations_prev) {
     subjects_add <- unique(migrations_add$Subject)

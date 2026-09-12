@@ -56,6 +56,7 @@ pathopath <- function(movements = NULL, samples = NULL, dt = 3) {
                                  dt = dt)))
 }
 
+
 .summarise_contacts <- function(contacts) {
     # This function summarises contacts at the pathway level for each combination of Subject_1, Subject_2, Pathway_1,
     # and Pathway_2. Specifically, for each combination, it calculates the total lengths of direct and indirect contacts,

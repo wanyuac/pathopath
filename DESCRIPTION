@@ -1,4 +1,4 @@
-Package: pathopath
+Package: PathoPath
 Type: Package
 Title: Network-based epidemiological analysis
 Version: 0.0.6

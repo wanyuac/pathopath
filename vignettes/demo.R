@@ -6,7 +6,7 @@
 library(dplyr)
 library(readr)
 library(tidyr)
-library(pathopath)
+library(PathoPath)
 
 # Section 1: build an initial contact network ###############
 pp <- pathopath(movements = "vignettes/input_movements.tsv",

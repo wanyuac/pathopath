@@ -42,6 +42,7 @@ assess_pathways <- function(pathways) {
     return(all(pass))
 }
 
+
 .assess_timestamps <- function(time_start, time_end, location, pathway, subject) {
     # Check timestamps of a location-time tuple (single row) in a pathway to ensure
     # that time_start is not greater than time_end at each location
@@ -51,6 +52,7 @@ assess_pathways <- function(pathways) {
     }
     return(quality)
 }
+
 
 .assess_pathway_integrity <- function(pathway, pathway_id, subject) {
     # Check the integrity of a pathway, given that the read_pathways function has sorted

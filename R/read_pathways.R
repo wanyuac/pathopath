@@ -67,6 +67,7 @@ read_pathways <- function(movement_table, count_migrations = TRUE) {
                migrations = migrations))
 }
 
+
 .build_pathways <- function(movements) {
     # This function assumes rows in movements are sorted by Subject, Pathway ID, and Time_start in
     # an ascending order.
@@ -75,6 +76,7 @@ read_pathways <- function(movement_table, count_migrations = TRUE) {
     pathways <- lapply(pathways, function(df) select(df, -Subject))  # Drop the redundant Subject column from each tibble
     return(pathways)
 }
+
 
 .summarise_migrations <- function(movements) {
     # Calculate the number of location transitions - 1 per pathway of each subject

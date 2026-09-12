@@ -80,6 +80,7 @@ create_network <- function(contact_summary, samples = NULL) {
     return(new("Network", V = nodes, E = edges))
 }
 
+
 .read_samples <- function(sample_data = NULL) {
     if (! is.null(sample_data)) {
         if (file_exists(sample_data)) {
