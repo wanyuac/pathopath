@@ -58,9 +58,7 @@ pathway_clustering <- function(E = NULL, V = NULL, l_max = Inf) {
     }
 
     # Build an undirected network as an igraph object ###############
-    g <- igraph::graph_from_data_frame(d = E[, c("Pathway_1", "Pathway_2", "Contact_len")],
-                                       directed = FALSE,
-                                       vertices = V$Pathway)
+    g <- igraph::graph_from_data_frame(d = E[, c("Pathway_1", "Pathway_2")], directed = FALSE, vertices = V$Pathway)
 
     # Identify connected components ###############
     comps <- igraph::components(g)  # Since g is an undirected network, the "mode" parameter of the components function has no effect on the result.
