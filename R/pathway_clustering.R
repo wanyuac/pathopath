@@ -1,8 +1,9 @@
 #' @title Create a network as an igraph object and identify connected components in the network based on contact lengths
 #'
-#' @description This function creates an igraph-class contact network from a node table and an edge table, optionally
-#' pruned to remove edges with contact lengths greater than a maximum contact length, and then identifies connect
-#' components in the network. Users can prune the node and edge tables in other ways before calling this function.
+#' @description This function creates an undirected, weighted contact network from a node table and an edge table that
+#' optionally has been pruned to remove edges with contact lengths greater than a maximum length and/or a specific contact
+#' type (direct or indirect contacts), and then identifies connect components in the pruned network. Users can prune the
+#' node and edge tables in other ways before calling this function.
 #'
 #' @param E A mandatory edge table, which can be the data frame E in function pathopath's output network object. This
 #' data frame must contain columns named "Pathway_1" and "Pathway_2".
@@ -19,13 +20,13 @@
 #'
 #' @import igraph
 
-#' @export contact_clustering
+#' @export pathway_clustering
 #
 #  Copyright (C) 2025-2026 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 31 May 2026; the latest update: 31 May 2026
+#  Creation: 31 May 2026; the latest update: 13 September 2026
 
-contact_clustering <- function(E = NULL, V = NULL, l_max = Inf) {
+pathway_clustering <- function(E = NULL, V = NULL, l_max = Inf) {
     # Validate inputs ###############
     if (is.null(E) || !is.data.frame(E)) {
         stop("E must be a non-NULL data frame of network edges.")

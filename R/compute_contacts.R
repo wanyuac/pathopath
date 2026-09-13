@@ -20,7 +20,7 @@
 #
 #  Copyright (C) 2025 Yu Wan <yu.wan@liverpool.ac.uk>, Mohammad Saiful Islam Sajib <saiful.sajib@chrfbd.org>
 #  Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-#  Creation: 13 November 2025; the latest update: 6 January 2026
+#  Creation: 13 November 2025; the latest update: 12 September 2026
 
 compute_contacts <- function(pathways, dt = 3) {
     # This function creates pairwise combinations of subject names as list of two-element character vectors using the
@@ -133,6 +133,7 @@ compute_contacts <- function(pathways, dt = 3) {
         # and an interval of zero, which means patient 2 entered a specific location on the next day of patient 1's
         # depature from this location. Similarly, patient 2 entered the location on the third day after patient 1's
         # departure when interval = 2, so an indirect contact should be reported between these two patients when dt = 3.
+        # For the aforementioned reason, the decision for this branch cannot be internal <= dt.
         contact_status <- "Indirect"
         # Lengths of indirect contacts depend on the dt parameter.
         # An example of the calculation of indirect-contact lengths: patient 1 left location A on 2025-11-01 and patient 2
